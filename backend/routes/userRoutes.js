@@ -1,0 +1,18 @@
+const express = require('express')
+
+const router = express.Router()
+const protect = require('../middleware/protect.js')
+const userController = require('../controllers/userController')
+
+router
+    .route('/')
+        .get(protect.allProtect, userController.getAllUsers)
+
+router
+    .route('/:username')
+        .get(protect.allProtect, userController.getUserProfile)
+        .patch(protect.personalProtect, userController.updateUserProfile)
+        .delete(protect.personalProtect, userController.deleteUser)
+        
+
+module.exports = router 
