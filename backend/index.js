@@ -12,6 +12,7 @@ const problemsRouter = require('./routes/problemsRoutes')
 const submissionsRouter = require('./routes/submissionsRoutes')
 const userRouter = require('./routes/userRoutes')
 const leaderboardRouter = require('./routes/leaderboardRoutes')
+const compileRouter = require('./routes/compileRoutes')
 
 
 const app = express();  
@@ -29,6 +30,7 @@ const connectWithRetry = () => {
 connectWithRetry();
 
 app.use(cors());
+app.use(express.urlencoded());
 app.use(express.json({urlencoded: true}))
 app.use(session({
     secret: SESSION_SECRET
@@ -38,5 +40,6 @@ app.use('/', homeRouter)
 app.use('/problems', problemsRouter, submissionsRouter)
 app.use('/leaderboard', leaderboardRouter)
 app.use('/users', userRouter)
+app.use('/compile', compileRouter)
 
 app.listen(PORT, () => console.log("Listening on port "+PORT));

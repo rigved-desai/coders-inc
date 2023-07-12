@@ -2,7 +2,7 @@ const User = require('../models/userModel.js')
 
 exports.getRankings = async (req, res, next) => {
     try {
-        const users = await User.find({}).sort({numberOfSolves: -1}).exec()
+        const users = await User.find().select('-_id username numberOfSolves').sort({numberOfSolves: -1})
         return res.status(200).json(users)
     }
     catch(e) {

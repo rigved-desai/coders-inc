@@ -22,7 +22,11 @@ const userSchema  = new mongoose.Schema({
     numberOfSolves: {
         type: Number,
         default: 0
-    } 
+    },
+    numberOfSubmissions: {
+        type: Number,
+        default: 0        
+    }
 })
 
 const User = mongoose.model("User", userSchema)

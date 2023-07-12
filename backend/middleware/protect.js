@@ -4,7 +4,8 @@ exports.allProtect = (req, res, next) => {
     const {user} = req.session
 
     if(!user) {
-        return res.status(401).json({status: "fail", message: "Unauthorized to view"})
+        // return res.status(401).json({status: "fail", message: "Unauthorized to view"})
+        res.redirect('/login')
     }
     req.user = user
     next()
@@ -24,7 +25,7 @@ exports.adminProtect = (req, res, next) => {
     const {user} = req.session
 
     const profile = User.find(req.params.username)
-    if(user.id != "admin") {
+    if(profile.role != "admin") {
         return res.status(401).json({status: "fail", message: "Unauthorized to view"})
     }
     next()

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const submissionSchema = new mongoose.Schema({
-    submitterUserID: {
+    submitterUserName: {
         type: String, 
         required: true
     },
@@ -26,7 +26,7 @@ const submissionSchema = new mongoose.Schema({
         required: true
     } ,
     runTime: {
-        type: String, 
+        type: Number, 
         required: true
     }
 })
