@@ -9,7 +9,7 @@ router
         .get(protect.allProtect, userController.getAllUsers)
 
 router
-    .route('/:username')
+    .route('/:uname')
         .get(protect.allProtect, userController.getUserProfile)
         .patch(protect.personalProtect, userController.updateUserProfile)
         .delete(protect.personalProtect, userController.deleteUser)

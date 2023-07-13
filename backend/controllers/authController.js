@@ -3,6 +3,8 @@ const mongoose = require('mongoose')
 const bcyrpt = require('bcrypt')
 
 exports.registerUser = async (req, res, next) => {
+
+    //check for username and email existing in db first
     const { username, email, password } = req.body;
     try {
         const hashedPassword = await bcyrpt.hash(password, 10)
@@ -17,7 +19,8 @@ exports.registerUser = async (req, res, next) => {
     catch(e) {
         console.log(e.message)
         return res.status(404).json({
-            status: "fail"
+            status: "fail",
+            message: "this email or username is already in use"
         })
     }
 }
@@ -43,6 +46,20 @@ exports.loginUser = async(req, res, next) => {
                 status: "Wrong password"
             })
         }
+    }
+    catch(e) {
+        console.log(e.message)
+        return res.status(404).json({
+            status: "fail"
+        })
+    }
+}
+exports.logoutUser = async(req, res, next) => {
+    try {
+        req.session = null;
+        return res.status(200).json({
+            status: "success"
+        })         
     }
     catch(e) {
         console.log(e.message)

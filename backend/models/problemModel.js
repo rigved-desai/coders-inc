@@ -12,6 +12,7 @@ const problemSchema = new mongoose.Schema({
     },
     tags: {
         type: [String],
+        required: true
     },
     difficulty: {
         type: String, 
@@ -30,14 +31,11 @@ const problemSchema = new mongoose.Schema({
         default: 0
     },
     solvers: {
-        type: [String]        
-    },
-    testCases: {
-        type: [Buffer],
-        required: true
+        type: [String],
+        default: []    
     }
 })
 
 const Problem = mongoose.model("Problem", problemSchema)
 
-exports.module = Problem
+module.exports = Problem

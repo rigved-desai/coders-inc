@@ -3,7 +3,7 @@ const Submission = require('../models/submissionModel')
 
 exports.loadSubmitPage = async (req, res, next) => {
     try {
-        const problemID = req.params.problemID;
+        const problemID = req.params.id;
         const problem = await Problem.findById(problemID).select('name')
         return res.status(200).json(problem)
     }
@@ -17,7 +17,7 @@ exports.loadSubmitPage = async (req, res, next) => {
 
 exports.submitSolution = async (req, res, next) => {
     try {
-        const problemID = req.params.problemID;
+        const problemID = req.params.id;
         const {language, submissionFile}  = req.body;
         
         let solution //get file from user
@@ -51,12 +51,10 @@ exports.submitSolution = async (req, res, next) => {
 
 exports.loadAllSubmissions = async (req, res, next) => {
     try {
-        const submissions = await Submission.create({
-
-        })
+        const submissions = await Submission.findAll();
+        return res.status(200).json(submissions)    
     }
     catch(e) {
-        console.log(e.message);
         console.log(e.message);
         return res.status(404).json({
             result: "fail"
@@ -64,9 +62,32 @@ exports.loadAllSubmissions = async (req, res, next) => {
     }
 }
 
-exports.loadSubmissionsByProblemID = (req, res, next) => {
-    
+exports.loadSubmissionsByProblemID = async (req, res, next) => {
+    const problemID = req.params.id
+    try {
+        const submissions = await Submission.find({problemID: problemID});
+        return res.status(200).json(submissions)
+        
+    }
+    catch(e) {
+        console.log(e.message);
+        return res.status(404).json({
+            result: "fail"
+        })
+    }
 }
-exports.getSubmissionByID = (req, res, next) => {
-    
+exports.getSubmissionByID = async (req, res, next) => {
+    const solutionID = req.params.sid
+    const problemID = req.params.id
+
+    try  {
+        const submission = await Submissions.find({problemID: problemID, _id:solutionID})
+        return res.status(200).json(submission)
+    }
+    catch(e) {
+        console.log(e.message);
+        return res.status(404).json({
+            result: "fail"
+        })
+    }
 }

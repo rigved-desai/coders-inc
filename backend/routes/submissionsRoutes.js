@@ -19,7 +19,7 @@ router
         .get(protect.allProtect, submissionsController.loadSubmissionsByProblemID)
 
 router
-    .route('/:id/submissions/:sid')
+    .route('/submissions/:sid')
         .get(protect.allProtect, submissionsController.getSubmissionByID)
 
 module.exports = router

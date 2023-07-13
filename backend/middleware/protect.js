@@ -11,11 +11,10 @@ exports.allProtect = (req, res, next) => {
     next()
 }
 
-exports.personalProtect = (req, res, next) => {
+exports.personalProtect = async (req, res, next) => {
     const {user} = req.session
-
-    const profile = User.find(req.params.username)
-    if(user.id != profile.id) {
+    const profile = await User.findOne({username: req.params.uname})
+    if(user._id != profile._id.valueOf()) {
         return res.status(401).json({status: "fail", message: "Unauthorized to view"})
     }
     next()

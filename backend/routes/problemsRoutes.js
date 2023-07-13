@@ -15,4 +15,8 @@ router
         .delete(protect.adminProtect, problemsController.deleteProblem)
         .patch(protect.adminProtect, problemsController.updateProblem)
 
+router
+    .route('/:id/addtc')
+        .post(protect.adminProtect, problemsController.addTestCase)
+
 module.exports = router 
