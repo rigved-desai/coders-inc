@@ -17,4 +17,8 @@ router
     .route('/login') 
         .post(authController.loginUser, homeController.getHomePage)
 
+router
+    .route('/logout')
+        .get(authController.logoutUser)
+
 module.exports = router 

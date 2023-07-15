@@ -3,7 +3,7 @@ const TestCase = require('../models/testCaseModel')
 
 exports.getAllProblems = async (req, res, next) => {
     try {
-        const problems = await Problem.find().select('name, tags, difficulty, numberOfSolves')
+        const problems = await Problem.find().select('name tags difficulty numberOfSolves')
         return res.status(200).json(problems)
     }
     catch(e) {
@@ -16,7 +16,7 @@ exports.getAllProblems = async (req, res, next) => {
 
 exports.addProblem = async (req, res, next) => {
     try {
-        const {name, statement, tags, difficulty, sampleInput, sampleOutput, testCases} = req.body;
+        const {name, statement, tags, difficulty, sampleInput, sampleOutput} = req.body;
 
         await Problem.create({
             name: name,
@@ -24,9 +24,7 @@ exports.addProblem = async (req, res, next) => {
             tags: tags,
             difficulty: difficulty, 
             sampleInput: sampleInput,
-            sampleOutput: sampleOutput, 
-            testCases: testCases
-
+            sampleOutput: sampleOutput
         })
         return res.status(200).json({
             result: "success"

@@ -17,7 +17,6 @@ exports.saveFile = (language, code, input) => {
     }
     let filePath = path + uuidv4()
     let inputPath = path + uuidv4() + '.txt'
-    let newClassName
     if(language == 'c++') {
         filePath += '.cpp'
     }
@@ -28,8 +27,8 @@ exports.saveFile = (language, code, input) => {
         filePath += '.java'
     }
     try {
-        fs.writeFileSync(filePath, code)
-        fs.writeFileSync(inputPath, input)
+        fs.writeFileSync(filePath, code);
+        fs.writeFileSync(inputPath, input);
         return {filePath, inputPath};
     }
     catch(e) {
@@ -40,6 +39,7 @@ exports.saveFile = (language, code, input) => {
 
 exports.compileFile = async (language, filePath, res) => {
     if(language == 'py') return filePath
+    if(language == 'java') return filePath
 
     const exePath = '.\\codes\\' + uuidv4() + '.exe';
 
@@ -56,8 +56,8 @@ exports.compileFile = async (language, filePath, res) => {
             });
         });
     }
-    else if(language == 'java') {
-        
+    else {
+        return null;
     }
 }
 
@@ -77,7 +77,6 @@ exports.executeFile = async(exePath, language, inputPath) => {
     }
     else if(language == 'py') {
         return new Promise((resolve, reject) => {
-            //type input.txt | python your_script.py
             exec(`type ${inputPath} | python ${exePath}`, {timeout: 2000}, (error, stdout, stderr) => {
                 if (error) {
                     console.log(error.message);
@@ -89,6 +88,22 @@ exports.executeFile = async(exePath, language, inputPath) => {
             });
         });
     }
+    else if(language == 'java') {
+        return new Promise((resolve, reject) => {
+            exec(`java ${exePath} < ${inputPath}`, {timeout: 2000}, (error, stdout, stderr) => {
+                if(error) {
+                    console.log(error.message);
+                    reject(error.message);
+                }
+                else {
+                    resolve(stdout)
+                }
+            })
+        })
+    }
+    else {
+        return null;
+    }
 }
 
 exports.deleteFiles = async(files) => {
@@ -98,28 +113,4 @@ exports.deleteFiles = async(files) => {
     catch(error) {
         console.log(error.message)
     }
-}
-
-exports.editJavaFile = async (filePath)  => {
-    let newClassName = '';
-    for (let i = filePath.length - 6; i >= 0; i--) {
-        if (filePath[i] === '\\') break;
-        else newClassName += filePath[i];
-    }
-
-    newClassName = newClassName.split('').reverse().join('');
-    console.log(newClassName);
-    return new Promise((resolve, reject) => {
-        exec(
-          `(Get-Content -Raw ${filePath}) -replace "(?sm)public\\s+class .+?\\{", "public class ${newClassName} {" | Out-File -Encoding UTF8 ${filePath}`,
-          (error, stdout, stderr) => {
-            if (error) {
-                console.log(error.message)
-              reject(error);
-            } else {
-              resolve();
-            }
-          }
-        );
-      });
 }

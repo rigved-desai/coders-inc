@@ -54,9 +54,10 @@ exports.loginUser = async(req, res, next) => {
         })
     }
 }
+
 exports.logoutUser = async(req, res, next) => {
     try {
-        req.session = null;
+        req.session.user = null;
         return res.status(200).json({
             status: "success"
         })         

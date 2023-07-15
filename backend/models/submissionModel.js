@@ -9,12 +9,16 @@ const submissionSchema = new mongoose.Schema({
         type: String,
         required: true
     }, 
+    problemName: {
+        type: String,
+        required: true
+    },
     language: {
         type: String,
         required: true
     },
-    submissionFile: {
-        type: Buffer,
+    code: {
+        type: String,
         required: true,
     },
     submissionTime: {

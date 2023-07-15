@@ -26,6 +26,10 @@ const userSchema  = new mongoose.Schema({
     numberOfSubmissions: {
         type: Number,
         default: 0        
+    },
+    problemsSolved: {
+        type: [String],
+        default: []
     }
 })
 

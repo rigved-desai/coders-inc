@@ -1,5 +1,11 @@
 const Problem = require('../models/problemModel')
 const Submission = require('../models/submissionModel')
+const User = require('../models/userModel')
+const TestCase = require('../models/testCaseModel');
+const { executeCode } = require('./compileController');
+const {CODE_COMPILATION_FAILED,
+    CODE_TC_FAILED,
+    CODE_TC_PASSED, CODE_SERVER_ERROR} = require('../config/config')
 
 exports.loadSubmitPage = async (req, res, next) => {
     try {
@@ -10,7 +16,8 @@ exports.loadSubmitPage = async (req, res, next) => {
     catch(e) {
         console.log(e.message);
         return res.status(404).json({
-            result: "fail"
+            result: "fail",
+            message: "submission failed"
         })
     }
 }
@@ -18,46 +25,120 @@ exports.loadSubmitPage = async (req, res, next) => {
 exports.submitSolution = async (req, res, next) => {
     try {
         const problemID = req.params.id;
-        const {language, submissionFile}  = req.body;
-        
-        let solution //get file from user
+        const {language, code }  = req.body;
+        const username = req.session.user.username
+        if(problemID == undefined || language == undefined || code == undefined || username == undefined ) {
+            return res.status(404).json({
+             result: "fail",
+             message: "something went wrong"
+            })
+        }
         //fire container and receive stdout, if stdout does not exist, check stderr and return that
         // compare output.txt of user with checker/ans.txt and return verdict
+        const problem  = await Problem.findById(problemID).select('name')
+        const problemName = problem.name
+        req.body.isSubmission = true
+        const testcases = await TestCase.find({problemID: problemID})
+        if(testcases == undefined || testcases.length == 0) {
+            return res.status(404).json({
+                result: "fail",
+                message: "no test cases found"
+            })
+        }
 
-        // Defining faux variables for now to test API 
-        let verdict = "AC"
-        let runTime = 100
-        const submission = await Submission.create({
-            submitterUserName: res.session.user.username,
+        for(let i=0; i<testcases.length; i++) {
+            req.body.input = testcases[i].testCaseInput;
+            req.body.output = testcases[i].testCaseOutput;
+
+            try {
+                let ok = await executeCode(req, res, next);
+
+                if(ok == CODE_SERVER_ERROR) {
+                    throw Error("Server error")
+                }  
+                else if(ok == CODE_COMPILATION_FAILED) {
+                    throw Error("Compilation Error")
+                }
+                else if(ok == CODE_TC_FAILED) {
+                    throw Error("Wrong Answer on Test Case " + (i+1).toString())
+                }
+            }
+            catch(e) {
+                if(e.message == "Server error"){
+                    return res.status(404).json({
+                        result: "fail",
+                        message: "Server error",
+                    })
+                }
+                let verdict = e.message
+                await Submission.create({
+                    submitterUserName: username,
+                    problemID: problemID,
+                    problemName: problemName,
+                    language: language,
+                    code: code,
+                    verdict: verdict,
+                    runTime: 1000
+                })
+                await User.findOneAndUpdate({_id: req.session.user._id}, {$inc: {numberOfSubmissions: 1}}, {new: true})
+                return res.status(200).json({
+                    result: "success",
+                    message: verdict,
+                })
+            }
+        }
+
+        const user = await User.findOne({_id: req.session.user._id})
+        let hasSolvedBefore = false
+        for(let i = 0; i<user.problemsSolved.length; i++) {
+            if(user.problemsSolved[i] == problemID) {
+                hasSolvedBefore = true;
+                console.log("Found")
+                break;
+            }
+        }
+        if(hasSolvedBefore) {
+            await User.findOneAndUpdate({_id: req.session.user._id}, {$inc: {numberOfSubmissions: 1}})
+        }
+        else {
+            await User.findOneAndUpdate({_id: req.session.user._id}, {$inc: {numberOfSubmissions: 1, numberOfSolves: 1}, $push: {problemsSolved: problemID}})
+            await Problem.findOneAndUpdate({_id: problemID}, {$push: {solvers: username}, $inc: {numberOfSolves: 1} })
+        }
+        
+        await Submission.create({
+            submitterUserName: username,
             problemID: problemID,
+            problemName: problemName,
             language: language,
-            submissionFile: submissionFile,
-            verdict: verdict,
-            runTime: runTime
+            code: code,
+            verdict: "Accepted",
+            runTime: 1000
         })
         return res.status(200).json({
-            result: "success"
+            result: "success",
+            message: "testcases passed"
         })
-
+        
     }
     catch(e) {
         console.log(e.message);
-        console.log(e.message);
         return res.status(404).json({
-            result: "fail"
+            result: "fail",
+            message: "something went wrong"
         })
     }
 }
 
 exports.loadAllSubmissions = async (req, res, next) => {
     try {
-        const submissions = await Submission.findAll();
+        const submissions = await Submission.find();
         return res.status(200).json(submissions)    
     }
     catch(e) {
         console.log(e.message);
         return res.status(404).json({
-            result: "fail"
+            result: "fail",
+            message: "fetch failed"
         })
     }
 }
@@ -65,29 +146,43 @@ exports.loadAllSubmissions = async (req, res, next) => {
 exports.loadSubmissionsByProblemID = async (req, res, next) => {
     const problemID = req.params.id
     try {
-        const submissions = await Submission.find({problemID: problemID});
+        const problem = await Problem.findOne({_id: problemID});
+        if(problem == undefined) {
+            return res.status(404).json({
+                result: "fail",
+                message: "no such problem exists"
+            })
+        }
+        const submissions = await Submission.find({problemID: problemID}).select('-code');
         return res.status(200).json(submissions)
         
     }
     catch(e) {
         console.log(e.message);
         return res.status(404).json({
-            result: "fail"
+            result: "fail",
+            message: "fetching submissions failed"
         })
     }
 }
 exports.getSubmissionByID = async (req, res, next) => {
-    const solutionID = req.params.sid
-    const problemID = req.params.id
+    const submissionID = req.params.sid
 
     try  {
-        const submission = await Submissions.find({problemID: problemID, _id:solutionID})
+        const submission = await Submission.findOne({_id:submissionID})
+        if(submission == undefined) {
+            return res.status(404).json({
+                result: "fail",
+                message: "no such solution exists"
+            })
+        }
         return res.status(200).json(submission)
     }
     catch(e) {
         console.log(e.message);
         return res.status(404).json({
-            result: "fail"
+            result: "fail",
+            message: "fetching submissions failed"
         })
     }
 }

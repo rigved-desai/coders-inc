@@ -37,7 +37,7 @@ app.use(session({
 }))
 
 app.use('/', homeRouter)
-app.use('/problems', problemsRouter, submissionsRouter)
+app.use('/problems', submissionsRouter, problemsRouter)
 app.use('/leaderboard', leaderboardRouter)
 app.use('/users', userRouter)
 app.use('/compile', compileRouter)
