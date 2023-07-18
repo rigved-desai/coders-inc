@@ -8,7 +8,7 @@ const submissionsController = require('../controllers/submissionController')
 router
     .route('/:id/submit')
         .get(protect.allProtect, submissionsController.loadSubmitPage)
-        .post(protect.personalProtect, submissionsController.submitSolution)
+        .post(protect.allProtect, submissionsController.submitSolution)
 
 router
     .route('/submissions')

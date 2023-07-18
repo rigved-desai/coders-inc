@@ -1,6 +1,15 @@
 const User = require('../models/userModel.js')
 const mongoose = require('mongoose')
 const bcyrpt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+
+const generateToken = (payload) => {
+    const options = {
+        expiresIn: '1h'
+    }
+    const token = jwt.sign(payload, process.env.SESSION_SECRET, options)
+    return token
+}
 
 exports.registerUser = async (req, res, next) => {
 
@@ -13,10 +22,12 @@ exports.registerUser = async (req, res, next) => {
             email: email,
             password: hashedPassword
         });
-        req.session.user = user;
+        const token = generateToken({ username: user._id })
+        res.set('Authorization', 'Bearer ' + token);
+        req.user = user;
         next()
     }
-    catch(e) {
+    catch (e) {
         console.log(e.message)
         return res.status(404).json({
             status: "fail",
@@ -25,20 +36,21 @@ exports.registerUser = async (req, res, next) => {
     }
 }
 
-exports.loginUser = async(req, res, next) => {
-    const {email, password} = req.body
-    
+exports.loginUser = async (req, res, next) => {
+    const { email, password } = req.body
+
     try {
-        const user = await User.findOne({email: email});
-        // console.log(user)
-        if(!user) {
+        const user = await User.findOne({ email: email });
+        console.log(user)
+        if (!user) {
             return res.status(404).json({
                 status: "User does not exist!"
             })
         }
-       if(await bcyrpt.compare(password, user.password)) {
-            req.session.user = user
+        if (await bcyrpt.compare(password, user.password)) {
             req.user = user.username
+            const token = generateToken({ id: user._id, username: user.username, })
+            res.set('Authorization', 'Bearer ' + token);
             next()
         }
         else {
@@ -47,7 +59,7 @@ exports.loginUser = async(req, res, next) => {
             })
         }
     }
-    catch(e) {
+    catch (e) {
         console.log(e.message)
         return res.status(404).json({
             status: "fail"
@@ -55,14 +67,14 @@ exports.loginUser = async(req, res, next) => {
     }
 }
 
-exports.logoutUser = async(req, res, next) => {
+exports.logoutUser = async (req, res, next) => {
     try {
-        req.session.user = null;
+        if (req.user) req.user = null;
         return res.status(200).json({
             status: "success"
-        })         
+        })
     }
-    catch(e) {
+    catch (e) {
         console.log(e.message)
         return res.status(404).json({
             status: "fail"

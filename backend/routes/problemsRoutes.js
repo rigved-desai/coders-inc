@@ -12,11 +12,11 @@ router
 router
     .route('/:id')
         .get(protect.allProtect, problemsController.getProblemByID)
-        .delete(protect.adminProtect, problemsController.deleteProblem)
-        .patch(protect.adminProtect, problemsController.updateProblem)
+        .delete(protect.allProtect, protect.adminProtect, problemsController.deleteProblem)
+        .patch(protect.allProtect, protect.adminProtect, problemsController.updateProblem)
 
 router
     .route('/:id/addtc')
-        .post(protect.adminProtect, problemsController.addTestCase)
+        .post(protect.allProtect, protect.adminProtect, problemsController.addTestCase)
 
 module.exports = router 

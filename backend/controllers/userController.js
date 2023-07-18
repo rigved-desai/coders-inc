@@ -34,7 +34,6 @@ exports.getUserProfile = async (req, res, next) => {
     }
 }
 
-
 exports.updateUserProfile = async (req, res, next) => {
     const username = req.params.uname;
     const params = req.body;
@@ -73,7 +72,7 @@ exports.deleteUser = async (req, res, next) => {
                 message: "User not found"
             })
         }
-        req.session.user = null;
+        req.user = null;
         return res.status(200).json({
             result: "success",
             message: "User successfully deleted"

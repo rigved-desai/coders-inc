@@ -11,8 +11,8 @@ router
 router
     .route('/:uname')
         .get(protect.allProtect, userController.getUserProfile)
-        .patch(protect.personalProtect, userController.updateUserProfile)
-        .delete(protect.personalProtect, userController.deleteUser)
+        .patch(protect.allProtect, protect.personalProtect, userController.updateUserProfile)
+        .delete(protect.allProtect, protect.personalProtect, userController.deleteUser)
         
 
 module.exports = router 

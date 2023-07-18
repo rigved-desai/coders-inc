@@ -5,7 +5,7 @@ const TestCase = require('../models/testCaseModel');
 const { executeCode } = require('./compileController');
 const {CODE_COMPILATION_FAILED,
     CODE_TC_FAILED,
-    CODE_TC_PASSED, CODE_SERVER_ERROR} = require('../config/config')
+    CODE_SERVER_ERROR} = require('../config/config')
 
 exports.loadSubmitPage = async (req, res, next) => {
     try {
@@ -26,15 +26,16 @@ exports.submitSolution = async (req, res, next) => {
     try {
         const problemID = req.params.id;
         const {language, code }  = req.body;
-        const username = req.session.user.username
+        const username = req.user
+
+        
         if(problemID == undefined || language == undefined || code == undefined || username == undefined ) {
             return res.status(404).json({
              result: "fail",
              message: "something went wrong"
             })
         }
-        //fire container and receive stdout, if stdout does not exist, check stderr and return that
-        // compare output.txt of user with checker/ans.txt and return verdict
+
         const problem  = await Problem.findById(problemID).select('name')
         const problemName = problem.name
         req.body.isSubmission = true
@@ -80,7 +81,7 @@ exports.submitSolution = async (req, res, next) => {
                     verdict: verdict,
                     runTime: 1000
                 })
-                await User.findOneAndUpdate({_id: req.session.user._id}, {$inc: {numberOfSubmissions: 1}}, {new: true})
+                await User.findOneAndUpdate({_id: req.userid}, {$inc: {numberOfSubmissions: 1}}, {new: true})
                 return res.status(200).json({
                     result: "success",
                     message: verdict,
@@ -88,20 +89,21 @@ exports.submitSolution = async (req, res, next) => {
             }
         }
 
-        const user = await User.findOne({_id: req.session.user._id})
+        //TODO: Can optimise this process of searching for a problem ID in an array of problems solved by the user
+
+        const user = await User.findOne({_id: req.userid})
         let hasSolvedBefore = false
         for(let i = 0; i<user.problemsSolved.length; i++) {
             if(user.problemsSolved[i] == problemID) {
                 hasSolvedBefore = true;
-                console.log("Found")
                 break;
             }
         }
         if(hasSolvedBefore) {
-            await User.findOneAndUpdate({_id: req.session.user._id}, {$inc: {numberOfSubmissions: 1}})
+            await User.findOneAndUpdate({_id: req.userid}, {$inc: {numberOfSubmissions: 1}})
         }
         else {
-            await User.findOneAndUpdate({_id: req.session.user._id}, {$inc: {numberOfSubmissions: 1, numberOfSolves: 1}, $push: {problemsSolved: problemID}})
+            await User.findOneAndUpdate({_id: req.userid}, {$inc: {numberOfSubmissions: 1, numberOfSolves: 1}, $push: {problemsSolved: problemID}})
             await Problem.findOneAndUpdate({_id: problemID}, {$push: {solvers: username}, $inc: {numberOfSolves: 1} })
         }
         
@@ -131,7 +133,7 @@ exports.submitSolution = async (req, res, next) => {
 
 exports.loadAllSubmissions = async (req, res, next) => {
     try {
-        const submissions = await Submission.find();
+        const submissions = await Submission.find().select('-code').sort({submissionTime: -1});
         return res.status(200).json(submissions)    
     }
     catch(e) {
@@ -153,7 +155,7 @@ exports.loadSubmissionsByProblemID = async (req, res, next) => {
                 message: "no such problem exists"
             })
         }
-        const submissions = await Submission.find({problemID: problemID}).select('-code');
+        const submissions = await Submission.find({problemID: problemID}).select('-code').sort({submissionTime: -1});
         return res.status(200).json(submissions)
         
     }
