@@ -29,7 +29,7 @@ const connectWithRetry = () => {
 
 connectWithRetry();
 
-app.use(cors());
+app.use(cors({ exposedHeaders: 'Authorization' }));
 app.use(express.urlencoded());
 app.use(express.json({urlencoded: true}))
 app.use(session({

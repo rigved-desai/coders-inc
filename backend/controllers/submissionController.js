@@ -28,7 +28,7 @@ exports.submitSolution = async (req, res, next) => {
         const {language, code }  = req.body;
         const username = req.user
 
-        
+
         if(problemID == undefined || language == undefined || code == undefined || username == undefined ) {
             return res.status(404).json({
              result: "fail",
@@ -46,21 +46,24 @@ exports.submitSolution = async (req, res, next) => {
                 message: "no test cases found"
             })
         }
-
+        let testDetails = []
         for(let i=0; i<testcases.length; i++) {
             req.body.input = testcases[i].testCaseInput;
             req.body.output = testcases[i].testCaseOutput;
-
+            
             try {
-                let ok = await executeCode(req, res, next);
-
-                if(ok == CODE_SERVER_ERROR) {
+                let result = await executeCode(req, res, next);
+                testDetails.push ({
+                    testNumber: i+1,
+                    timeTaken: result.timeTaken
+                })
+                if(result.code == CODE_SERVER_ERROR) {
                     throw Error("Server error")
                 }  
-                else if(ok == CODE_COMPILATION_FAILED) {
+                else if(result.code == CODE_COMPILATION_FAILED) {
                     throw Error("Compilation Error")
                 }
-                else if(ok == CODE_TC_FAILED) {
+                else if(result.code == CODE_TC_FAILED) {
                     throw Error("Wrong Answer on Test Case " + (i+1).toString())
                 }
             }
@@ -79,7 +82,7 @@ exports.submitSolution = async (req, res, next) => {
                     language: language,
                     code: code,
                     verdict: verdict,
-                    runTime: 1000
+                    testDetails: testDetails
                 })
                 await User.findOneAndUpdate({_id: req.userid}, {$inc: {numberOfSubmissions: 1}}, {new: true})
                 return res.status(200).json({
@@ -90,7 +93,6 @@ exports.submitSolution = async (req, res, next) => {
         }
 
         //TODO: Can optimise this process of searching for a problem ID in an array of problems solved by the user
-
         const user = await User.findOne({_id: req.userid})
         let hasSolvedBefore = false
         for(let i = 0; i<user.problemsSolved.length; i++) {
@@ -114,7 +116,7 @@ exports.submitSolution = async (req, res, next) => {
             language: language,
             code: code,
             verdict: "Accepted",
-            runTime: 1000
+            testDetails: testDetails
         })
         return res.status(200).json({
             result: "success",

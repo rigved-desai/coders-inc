@@ -32,25 +32,31 @@ exports.executeCode = async (req, res, next) => {
                 error: "failed while saving file"
             })
         }
-        
+
         const output = await fileHandlers.executeFile(result.filePath, language, result.inputPath);
-        
+
         files = [result.inputPath, result.filePath]
         fileHandlers.deleteFiles(files);
 
         if (req.body.isSubmission) {
 
             if (output.code !== 0) {
-                return CODE_COMPILATION_FAILED;
+                return ({
+                    code: CODE_COMPILATION_FAILED,
+                    timeTaken: output.timeTaken })
             }
             const userOutput = output.message.replace(/\s/g, '');
             const requiredOutput = req.body.output.replace(/\s/g, '');
 
             if (userOutput.localeCompare(requiredOutput) === 0) {
-                return CODE_TC_PASSED;
+                return ({
+                    code: CODE_TC_PASSED,
+                    timeTaken: output.timeTaken });
             }
             else {
-                return CODE_TC_FAILED;
+                return ({
+                    code: CODE_TC_FAILED,
+                    timeTaken: output.timeTaken });
             }
         }
         return res.status(200).json({

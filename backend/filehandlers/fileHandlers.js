@@ -1,7 +1,7 @@
 const fs = require('fs')
 const { v4: uuidv4 } = require('uuid');
 const Docker = require('dockerode')
-const tar = require('tar-stream')
+const tar = require('tar-stream');
 const docker = Docker() 
 
 const createContainer = (language) => {
@@ -10,21 +10,33 @@ const createContainer = (language) => {
         containerOptions = {
             Image: 'gcc:latest', 
             Tty: true,
-            Cmd:  ['sh', '-c', 'g++ -o ./app/output ./app/exeFile.cpp && ./app/output < ./app/inputFile.txt']
+            Cmd:  ['sh', '-c', 'g++ -o ./app/output ./app/exeFile.cpp && ./app/output < ./app/inputFile.txt'],
+            StopTimeout: 5,  
+            HostConfig: {
+                Memory: 100000000 // 100 mb
+            }
         }
     }
     else if(language == 'py') {
         containerOptions = {
             Image: 'python:latest', 
             Tty: true,
-            Cmd: ['sh', '-c', `python ./app/exeFile.py < ./app/inputFile.txt`]
+            Cmd: ['sh', '-c', `python ./app/exeFile.py < ./app/inputFile.txt`],
+            StopTimeout: 5,  
+            HostConfig: {
+                Memory: 100000000 // 100 mb
+            }
         }
     }
     else if(language == 'java') {
         containerOptions = {
             Image: 'amazoncorretto:17', 
             Tty: true,
-            Cmd: ['sh', '-c', 'java ./app/exeFile.java < ./app/inputFile.txt']
+            Cmd:['sh', '-c', `java ./app/exeFile.java < ./app/inputFile.txt`],
+            StopTimeout: 5,  
+            HostConfig: {
+                Memory: 100000000 // 100 mb
+            }
         }
     }
     else return null;
@@ -104,44 +116,40 @@ exports.executeFile = async(exePath, language, inputPath) => {
         pack.finalize();
 
         container.putArchive(pack, { path: "/" })
-
         await container.start()
         const { StatusCode } = await container.wait();
-
+        const containerInfo = await container.inspect()
+        const execTime = new Date(containerInfo.State.FinishedAt) - new Date(containerInfo.State.StartedAt)
         return new Promise((resolve, reject) => {
-            container.logs({stdout: true},  (err, stream) => {
+            container.logs({stdout: true, stderr: false,},  (err, stream) => {
                 if(err) {
                     console.log(err.message)
                     reject({
                         message: err.message,
-                        code: StatusCode
+                        code: StatusCode,
+                        timeTaken: execTime
                     });
                 }
-                if(!Buffer.isBuffer(stream)) {
-                    container.remove()
-                    resolve({
-                        message: stream.toString(),
-                        code: StatusCode})
-                }
-                else {
-                    container.remove()
-                    resolve({
-                        message: Buffer.from(stream).toString(),
-                        code: StatusCode})
-                }
+                container.remove()
+                resolve({
+                    message: stream.toString(),
+                    code: StatusCode,
+                    timeTaken: execTime
+                })
             })
         })
-
     }
     catch(error) {
         console.log(error.message)
         return({
             message: error.message,
-            code: -1
+            code: -1,
+            timeTaken: execTime
         });
     }
 
 }
+
 
 exports.deleteFiles = async(files) => {
     try {

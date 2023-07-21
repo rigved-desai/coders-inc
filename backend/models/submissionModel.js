@@ -29,10 +29,16 @@ const submissionSchema = new mongoose.Schema({
         type: String, 
         required: true
     } ,
-    runTime: {
-        type: Number, 
-        required: true
-    }
+    testDetails: [{
+        testNumber: {
+            type: Number,
+            required: true
+        },
+        timeTaken: {
+            type: Number,
+            required: true
+        }
+    }]
 })
 
 const Submission = mongoose.model("Submission", submissionSchema)

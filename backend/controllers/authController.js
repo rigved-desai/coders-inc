@@ -49,7 +49,7 @@ exports.loginUser = async (req, res, next) => {
         }
         if (await bcyrpt.compare(password, user.password)) {
             req.user = user.username
-            const token = generateToken({ id: user._id, username: user.username, })
+            const token = generateToken({ id: user._id, username: user.username})
             res.set('Authorization', 'Bearer ' + token);
             next()
         }

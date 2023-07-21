@@ -1,6 +1,5 @@
 exports.getHomePage = (req, res, next) => {
     const user = req.user
-    // console.log(user)
     if (!user) {
         res.status(404).json({
             result: "fail"
