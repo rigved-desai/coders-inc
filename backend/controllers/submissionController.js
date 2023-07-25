@@ -75,7 +75,7 @@ exports.submitSolution = async (req, res, next) => {
                     })
                 }
                 let verdict = e.message
-                await Submission.create({
+                const submission = await Submission.create({
                     submitterUserName: username,
                     problemID: problemID,
                     problemName: problemName,
@@ -88,6 +88,8 @@ exports.submitSolution = async (req, res, next) => {
                 return res.status(200).json({
                     result: "success",
                     message: verdict,
+                    verdict: 0,
+                    submissionID: submission._id
                 })
             }
         }
@@ -109,7 +111,7 @@ exports.submitSolution = async (req, res, next) => {
             await Problem.findOneAndUpdate({_id: problemID}, {$push: {solvers: username}, $inc: {numberOfSolves: 1} })
         }
         
-        await Submission.create({
+        const submission = await Submission.create({
             submitterUserName: username,
             problemID: problemID,
             problemName: problemName,
@@ -120,7 +122,9 @@ exports.submitSolution = async (req, res, next) => {
         })
         return res.status(200).json({
             result: "success",
-            message: "testcases passed"
+            message: "testcases passed",
+            verdict: 1,
+            submissionID: submission._id
         })
         
     }

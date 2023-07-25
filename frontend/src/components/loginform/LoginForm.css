@@ -1,4 +1,6 @@
-/* LoginForm.css */
+h1, h3 {
+    text-align: center;
+}
 
 form {
     display: flex;
@@ -11,21 +13,21 @@ form {
     background-color: #f9f9f9;
   }
   
-  div {
+  form div {
     margin-bottom: 10px;
   }
   
-  label {
+  form label {
     font-weight: bold;
   }
   
-  input {
+  form input {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
   }
   
-  button {
+  form button {
     padding: 10px;
     background-color: #468b97;
     color: #fff;
@@ -34,7 +36,7 @@ form {
     cursor: pointer;
   }
   
-  button:hover {
+  form button:hover {
     background-color: #335f6b;
   }
   

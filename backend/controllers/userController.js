@@ -17,7 +17,7 @@ exports.getAllUsers = async (req, res, next)=> {
 exports.getUserProfile = async (req, res, next) => {
     const username = req.params.uname
     try {
-        const user = await User.find({username: username}).select('-email -password -_id -__v')
+        const user = await User.findOne({username: username}).select('-email -password -_id -__v')
         if(!user || user.length == 0) {
             return res.status(404).json({
                 result: "fail",

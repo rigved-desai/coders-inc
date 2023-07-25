@@ -1,77 +1,49 @@
-/* styles.css */
-
-/* General styles */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
+h1 {
+    text-align: center;
+    font-family: 'Titillium Web';
+}
   
-  /* Center the table */
-  .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  
-  /* Table styles */
-  table {
-    width: 100%;
+  .custom-table {
+    width: 80%;
+    margin: 0 auto;
     border-collapse: collapse;
-    margin-top: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   }
   
-  th,
-  td {
-    padding: 12px 20px;
+  .leaderboard-th,
+  .leaderboard-td {
+    padding: 12px;
+    border: 1px solid #ccc;
     text-align: left;
   }
   
-  th {
+  .leaderboard-th {
     background-color: #f2f2f2;
+    color: #444;
+  }
+  
+  .leaderboard-column1 {
+    width: 80%;
+  }
+  
+  .leaderboard-column2 {
+    width: 20%;
+  }
+  
+  .leaderboard-tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .leaderboard-td + .leaderboard-td {
+    border-left: none;
+  }
+  
+  .leaderboard-tr + .leaderboard-tr {
+    border-top: 1px solid #ccc;
+  }
+  
+  .leaderboard-a {
+    text-decoration: none;
     font-weight: bold;
   }
-  
-  tr:nth-child(even) {
-    background-color: #f2f2f2;
-  }
-  
-  tr:hover {
-    background-color: #f0f0f0;
-  }
-  
-  /* Center text in cells */
-  td {
-    display: flex;
-    align-items: center;
-  }
-  
-  /* Add some spacing to the table */
-  table {
-    margin-bottom: 20px;
-  }
-  
-  /* Add a border to cells */
-  td {
-    border-bottom: 1px solid #ccc;
-  }
-  
-  /* Remove border from last cell in each row */
-  td:last-child {
-    border-bottom: none;
-  }
-  
-  /* Style the link */
-  a {
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-  a:hover {
-    text-decoration: underline;
-    color: #0056b3;
-  }
-  

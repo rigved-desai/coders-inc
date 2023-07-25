@@ -1,0 +1,40 @@
+.parent-container {
+    display:flex;
+}
+
+.editor-header-container {
+    display: flex;
+    align-items: flex-end;
+}
+
+.parent-container .child {
+    padding-left: 100px;
+}
+
+.child-container {
+    display:flex;
+    flex-basis: 50%; 
+    flex-direction: column;
+}
+
+.child-container .code-title {
+    font-size: 5vh;
+    font-family: 'Titillium Web';
+    font-weight: bold;
+    align-content: center;
+
+}
+.editor-container {
+    resize: vertical;
+    overflow:hidden;
+    border: 5px solid #ccc;
+    border-radius: 5px;
+}
+
+@media (max-width: 1029px) {
+
+    .child-container {
+      flex-basis: 100%; 
+      min-width: 0; 
+    }
+}

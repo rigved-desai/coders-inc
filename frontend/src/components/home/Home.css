@@ -1,0 +1,7 @@
+.home-buttons {
+    align-items: center;
+    display: flex;
+    margin: auto;
+    width: 50%;
+    justify-content: space-between;
+}

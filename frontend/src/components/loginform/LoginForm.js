@@ -6,14 +6,22 @@ import { useNavigate} from 'react-router-dom';
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState(null)
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+    setErrorMessage(null)
       const response = await axios.post('http://localhost:8000/login', { email, password });
+      
       const authHeader = response.headers['authorization'];
+        if(authHeader === undefined)  {
+            console.log(response.data.message)
+            setErrorMessage(response.data.message)
+            return;
+        }
       const token = authHeader ? authHeader.split(' ')[1] : null;
       console.log(token)
       if(token !== undefined) {
@@ -27,6 +35,9 @@ const LoginForm = () => {
   };
 
   return (
+    <>
+    <h1>Login</h1>
+    <h3>Login and start coding!</h3>
     <form onSubmit={handleSubmit}>
       <div>
         <label htmlFor="email">Email:</label>
@@ -47,7 +58,10 @@ const LoginForm = () => {
         />
       </div>
       <button type="submit">Login</button>
+      {errorMessage !== null ? (<p>{errorMessage}</p>):(<></>)}
     </form>
+
+    </>
   );
 };
 

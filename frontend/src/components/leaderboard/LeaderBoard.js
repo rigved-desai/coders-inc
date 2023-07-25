@@ -30,28 +30,31 @@ const LeaderBoard = () => {
   }, []);
 
   return (
+    <>
+    <h1>Leaderboard</h1>
     <div>
       {loading ? (
         <div>Loading...</div> // Show loading spinner while data is being fetched
-      ) : (
-        <table>
+      ) : ( 
+        <table className='custom-table'>
           <thead>
-            <tr>
-              <th>Username</th>
-              <th>Number of Solves</th>
+            <tr className='leaderboard-tr'>
+              <th className='leaderboard-th'>Username</th>
+              <th className='leaderboard-th'>Number of Solves</th>
             </tr>
           </thead>
           <tbody>
             {leaderboardData.map((item, index) => (
-              <tr key={index}>
-                <td><Link to={`/users/${item.username}`}>{item.username}</Link></td>
-                <td>{item.numberOfSolves}</td>
+              <tr key={index} className='leaderboard-tr'>
+                <td className='leaderboard-column1'><Link to={`/users/${item.username}`} className='leaderboard-a'>{item.username}</Link></td>
+                <td className='leaderboard-column2'>{item.numberOfSolves}</td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
     </div>
+    </>
   );
 };
 

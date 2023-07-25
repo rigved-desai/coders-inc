@@ -22,16 +22,16 @@ exports.registerUser = async (req, res, next) => {
             email: email,
             password: hashedPassword
         });
-        const token = generateToken({ username: user._id })
-        res.set('Authorization', 'Bearer ' + token);
-        req.user = user;
-        next()
+        return res.status(200).json({
+            status: "success",
+            message: "Registration Successful!"
+        })
     }
     catch (e) {
         console.log(e.message)
-        return res.status(404).json({
+        return res.status(200).json({
             status: "fail",
-            message: "this email or username is already in use"
+            message: "This email or username is already in use"
         })
     }
 }
@@ -43,8 +43,8 @@ exports.loginUser = async (req, res, next) => {
         const user = await User.findOne({ email: email });
         console.log(user)
         if (!user) {
-            return res.status(404).json({
-                status: "User does not exist!"
+            return res.status(200).json({
+                message: "User does not exist!"
             })
         }
         if (await bcyrpt.compare(password, user.password)) {
@@ -54,8 +54,8 @@ exports.loginUser = async (req, res, next) => {
             next()
         }
         else {
-            return res.status(404).json({
-                status: "Wrong password"
+            return res.status(200).json({
+                message: "Wrong password"
             })
         }
     }

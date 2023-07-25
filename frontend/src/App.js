@@ -1,5 +1,4 @@
 import './App.css';
-import BGLayout from './components/bglayout/BGLayout';
 import Home from './components/home/Home'
 import { Routes, Route} from 'react-router-dom';
 import ProblemList from './components/problemlist/ProblemList';
@@ -13,8 +12,6 @@ import Submission from './components/submission/Submission';
 import LoginForm from './components/loginform/LoginForm';
 import RegisterForm from './components/registerform/RegisterForm';
 
-
-
 function App() {
   return (
     <>
@@ -24,7 +21,7 @@ function App() {
     
       <Route path='/' element={<Home/>}/>
       
-      <Route path = '/problems' element = {<BGLayout/>}>
+      <Route path = '/problems'>
 
         <Route index element={<ProblemList/>}/>
         

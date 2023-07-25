@@ -1,0 +1,26 @@
+/* SubmissionCounter.css */
+.submission-counter {
+    font-family: 'Cascadia Code';
+    margin-left: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 20rem;
+    background-color: black;
+    color: white;
+    border-radius: 15px;
+    padding: 10px;
+  }
+  
+  .submission-counter-top {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .submission-counter-bottom {
+    font-size: 40px;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  

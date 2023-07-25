@@ -6,9 +6,9 @@ const docker = Docker()
 
 const createContainer = (language) => {
     let containerOptions
-    if(language == 'c++') {
+    if(language == 'cpp') {
         containerOptions = {
-            Image: 'gcc:latest', 
+            Image: 'frolvlad/alpine-gxx:latest', 
             Tty: true,
             Cmd:  ['sh', '-c', 'g++ -o ./app/output ./app/exeFile.cpp && ./app/output < ./app/inputFile.txt'],
             StopTimeout: 5,  
@@ -17,7 +17,7 @@ const createContainer = (language) => {
             }
         }
     }
-    else if(language == 'py') {
+    else if(language == 'python') {
         containerOptions = {
             Image: 'python:latest', 
             Tty: true,
@@ -67,10 +67,10 @@ exports.saveFile = (language, code, input) => {
     }
     let filePath = path + uuidv4()
     let inputPath = path + uuidv4() + '.txt'
-    if(language == 'c++') {
+    if(language == 'cpp') {
         filePath += '.cpp'
     }
-    else if(language == 'py') {
+    else if(language == 'python') {
         filePath += '.py'
     }
     else if(language == 'java') {
@@ -90,15 +90,16 @@ exports.saveFile = (language, code, input) => {
 exports.executeFile = async(exePath, language, inputPath) => {
 
     try {
+        console.log(`starting to create docker container at: ${Date.now().toString()}` )
         const container = await createContainer(language)
-
+        console.log(`Container created at: ${Date.now().toString()}` )
 
         const folderName = 'app';
         let exeFileName
-        if(language == 'c++') {
+        if(language == 'cpp') {
             exeFileName = 'exeFile.cpp'
         }
-        else if(language == 'py') {
+        else if(language == 'python') {
             exeFileName = 'exeFile.py'
         }
         else if(language == 'java') {
@@ -116,23 +117,28 @@ exports.executeFile = async(exePath, language, inputPath) => {
         pack.finalize();
 
         container.putArchive(pack, { path: "/" })
+        console.log(`starting docker container at: ${Date.now().toString()}` )
         await container.start()
+        console.log(`started docker container at: ${Date.now().toString()}` )
         const { StatusCode } = await container.wait();
+        console.log(`docker container processes ended at: ${Date.now().toString()}` )
         const containerInfo = await container.inspect()
         const execTime = new Date(containerInfo.State.FinishedAt) - new Date(containerInfo.State.StartedAt)
         return new Promise((resolve, reject) => {
             container.logs({stdout: true, stderr: false,},  (err, stream) => {
                 if(err) {
                     console.log(err.message)
+                    container.remove();
                     reject({
                         message: err.message,
                         code: StatusCode,
                         timeTaken: execTime
                     });
                 }
+                console.log("execution finished!")
                 container.remove()
                 resolve({
-                    message: stream.toString(),
+                    message: stream !== undefined ? stream.toString() : "Error",
                     code: StatusCode,
                     timeTaken: execTime
                 })
@@ -140,11 +146,12 @@ exports.executeFile = async(exePath, language, inputPath) => {
         })
     }
     catch(error) {
+        console.log("Error occured!")
         console.log(error.message)
         return({
             message: error.message,
             code: -1,
-            timeTaken: execTime
+            timeTaken: execTime !== undefined ? execTime : 0
         });
     }
 

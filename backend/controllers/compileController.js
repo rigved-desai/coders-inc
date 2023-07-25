@@ -9,7 +9,7 @@ exports.executeCode = async (req, res, next) => {
     try {
         const { language, code, input } = req.body;
 
-        if (language != 'c++' && language != 'java' && language != 'py') {
+        if (language != 'cpp' && language != 'java' && language != 'python') {
 
             if (req.body.isSubmission == true) {
                 return CODE_SERVER_ERROR;
@@ -32,7 +32,7 @@ exports.executeCode = async (req, res, next) => {
                 error: "failed while saving file"
             })
         }
-
+        console.log("Compiling")
         const output = await fileHandlers.executeFile(result.filePath, language, result.inputPath);
 
         files = [result.inputPath, result.filePath]

@@ -3,7 +3,7 @@ import './NotFound.css'
 const NotFound = () => {
     return (
         <>
-        <h1>THIS IS NOT FOUND ELEMENT</h1>
+        <p className='not-found-header'>OOPS THE PAGE YOU ARE LOOKING FOR DOES NOT EXIST!</p>
         </>
     )
 }
