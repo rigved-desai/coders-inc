@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import './ToggleThemeButton.css';
 
 const ToggleThemeButton = ({handleToggleMode, isDarkMode}) => {

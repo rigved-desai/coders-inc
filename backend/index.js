@@ -13,6 +13,7 @@ const submissionsRouter = require('./routes/submissionsRoutes')
 const userRouter = require('./routes/userRoutes')
 const leaderboardRouter = require('./routes/leaderboardRoutes')
 const compileRouter = require('./routes/compileRoutes')
+const validateRouter = require('./routes/validateRoutes')
 
 
 const app = express();  
@@ -41,5 +42,6 @@ app.use('/problems', submissionsRouter, problemsRouter)
 app.use('/leaderboard', leaderboardRouter)
 app.use('/users', userRouter)
 app.use('/compile', compileRouter)
+app.use('/validate', validateRouter)
 
 app.listen(PORT, () => console.log("Listening on port "+PORT));

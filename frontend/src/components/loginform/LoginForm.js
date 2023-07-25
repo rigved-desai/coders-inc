@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './LoginForm.css'
 import { useNavigate} from 'react-router-dom';
+import { SERVER_BASE_URL } from '../../config';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -14,7 +15,7 @@ const LoginForm = () => {
 
     try {
     setErrorMessage(null)
-      const response = await axios.post('http://localhost:8000/login', { email, password });
+      const response = await axios.post(`${SERVER_BASE_URL}/login`, { email, password });
       
       const authHeader = response.headers['authorization'];
         if(authHeader === undefined)  {

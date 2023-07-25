@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { SERVER_BASE_URL } from '../../config';
 import SolveCounter from './solvecounter/SolveCounter';
 import SubmissionCounter from './submissioncounter/SubmissionCounter';
 import './UserProfile.css'
@@ -13,8 +14,8 @@ const UserProfile = () => {
         numberOfSolves: '',
         numberOfSubmissions: ''
     })
-    const naviagate = useNavigate();
 
+    const naviagate = useNavigate();
 
     useEffect(() => {
         const fetchUserDetails = async () => {
@@ -25,7 +26,7 @@ const UserProfile = () => {
                         'Authorization': `Bearer ${token}`,
                     },
                 };
-                const response = await axios.get(`http://localhost:8000/users/${username}`, config);
+                const response = await axios.get(`${SERVER_BASE_URL}/users/${username}`, config);
                 console.log(response.data)
                 if(!response.data) {
                     naviagate('/*')

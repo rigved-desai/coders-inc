@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './LeaderBoard.css'
+import { SERVER_BASE_URL } from '../../config';
 
 const LeaderBoard = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
 
@@ -17,12 +19,13 @@ const LeaderBoard = () => {
               'Authorization': `Bearer ${token}`,
             },
           };
-        const response = await axios.get('http://localhost:8000/leaderboard', config);
+        const response = await axios.get(`${SERVER_BASE_URL}/leaderboard`, config);
         setLeaderboardData(response.data); 
         setLoading(false); 
       } catch (error) {
         console.error('Error fetching leaderboard data:', error);
         setLoading(false); 
+        navigate('/*')
       }
     };
 

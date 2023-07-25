@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './Home.css'
 import axios from 'axios'
 import Button from './Button/Button';
+import { SERVER_BASE_URL } from '../../config';
 
 const Home = () => {
 
@@ -16,7 +17,7 @@ const Home = () => {
                     'Authorization': `Bearer ${token}`,
                   },
                 };
-              const response = await axios.get('http://localhost:8000/', config);
+              const response = await axios.get(`${SERVER_BASE_URL}/`, config);
               console.log(response.data)
               setUsername(response.data.username); 
             } catch (error) {

@@ -2,6 +2,7 @@ import './SubmissionList.css'
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { SERVER_BASE_URL } from '../../config';
 
 const SubmissionList = () => {
 
@@ -20,7 +21,7 @@ const SubmissionList = () => {
             },
           };
         setLoading(true); 
-        const response = await axios.get('http://localhost:8000/problems/submissions', config);
+        const response = await axios.get(`${SERVER_BASE_URL}/problems/submissions`, config);
         setSubmissionList(response.data); 
         setLoading(false); 
       } catch (error) {
@@ -37,7 +38,7 @@ const SubmissionList = () => {
               },
             };
             setLoading(true); 
-          const response = await axios.get(`http://localhost:8000/problems/${id}/submissions`, config);
+          const response = await axios.get(`${SERVER_BASE_URL}/problems/${id}/submissions`, config);
           setSubmissionList(response.data); 
           setLoading(false); 
         } catch (error) {
@@ -79,7 +80,7 @@ const SubmissionList = () => {
             >
               {item.verdict}
             </td>
-                <td className='language'>{item.language === 'c++' ? 'C++' : item.language ==='py' ? 'Python' : 'Java'}</td>
+                <td className='language'>{item.language === 'cpp' ? 'C++' : item.language ==='python' ? 'Python' : 'Java'}</td>
                 <td className='submission-time'>{item.submissionTime.substring(0, 19)}</td>
               </tr>
             ))}

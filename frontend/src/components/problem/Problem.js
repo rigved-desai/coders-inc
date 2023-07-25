@@ -1,6 +1,6 @@
 import './Problem.css'
 import ProblemDesc from './problemdesc/ProblemDesc';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import Editor from "@monaco-editor/react"
@@ -11,6 +11,7 @@ import Input from './input/Input';
 import Output from './output/Output';
 import Verdict from './verdict/Verdict';
 import SubmitButton from './submitbutton/SubmitButton';
+import { SERVER_BASE_URL } from '../../config';
 
 const Problem = () => {
     let { id } = useParams();
@@ -37,6 +38,8 @@ const Problem = () => {
 
     const outputRef = useRef(null);
     const verdictRef = useRef(null);
+
+    const navigate = useNavigate()
 
     const handleEditorChange = (value) => {
         setEditorValue(value);
@@ -74,7 +77,7 @@ const Problem = () => {
                 language: language,
                 code: editorValue
             }
-            const response = await axios.post(`http://localhost:8000/problems/${id}/submit`,data, config);
+            const response = await axios.post(`${SERVER_BASE_URL}/problems/${id}/submit`,data, config);
             if(response.data.verdict === 1)  {
                 setVerdict("Accepted")
                 setIsAccepted(true)
@@ -157,6 +160,8 @@ const Problem = () => {
 
             } catch (error) {
                 console.error('Error fetching problem data:', error);
+                navigate('/*')
+                
             }
         }
         fetchProblemData();

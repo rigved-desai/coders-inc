@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './RegisterForm.css'
 import { useNavigate} from 'react-router-dom';
+import { SERVER_BASE_URL } from '../../config';
 
 const RegisterForm = () => {
   const [email, setEmail] = useState('');
@@ -20,7 +21,7 @@ const RegisterForm = () => {
             setErrorMessage("Passwords do not match!")
             return;
         }
-      const response = await axios.post('http://localhost:8000/register', {username, email, password });
+      const response = await axios.post(`${SERVER_BASE_URL}/register`, {username, email, password });
       if(response.data.status === 'fail') {
         setErrorMessage(response.data.message);
         return;

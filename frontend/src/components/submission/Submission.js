@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import './Submission.css'
 import axios from 'axios';
+import { SERVER_BASE_URL } from '../../config';
 
 const Submission = () => {
 
@@ -36,7 +37,7 @@ const Submission = () => {
                         'Authorization': `Bearer ${token}`,
                     },
                 };
-                const response = await axios.get(`http://localhost:8000/problems/submissions/${id}`, config);
+                const response = await axios.get(`${SERVER_BASE_URL}/problems/submissions/${id}`, config);
                 setSubmissionDetails(response.data)
 
             } catch (error) {

@@ -29,7 +29,7 @@ form {
   
    form button {
     padding: 10px;
-    background-color: #468b97;
+    background-color: #000;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -37,6 +37,6 @@ form {
   }
   
   form button:hover {
-    background-color: #335f6b;
+    background-color: grey;
   }
   

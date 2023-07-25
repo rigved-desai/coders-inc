@@ -8,7 +8,7 @@ const CompileButton = ({handlePress, isPressed, isCompiling, isSubmitting}) => {
       onClick={handlePress}
       disabled={isCompiling || isSubmitting}
       >
-    {isCompiling ? 'Compiling..' : "Compile"}
+    {isCompiling ? 'Compiling...' : "Compile"}
     </button>
   );
 };

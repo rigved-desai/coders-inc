@@ -1,12 +1,14 @@
 import './ProblemList.css'
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { SERVER_BASE_URL } from '../../config';
 
 const ProblemList = () => {
 
     const [problemList, setProblemList] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate()
 
   useEffect(() => {
 
@@ -18,12 +20,13 @@ const ProblemList = () => {
               'Authorization': `Bearer ${token}`,
             },
           };
-        const response = await axios.get('http://localhost:8000/problems', config);
+        const response = await axios.get(`${SERVER_BASE_URL}/problems`, config);
         setProblemList(response.data); 
         setLoading(false); 
       } catch (error) {
         console.error('Error fetching problem data:', error);
         setLoading(false); 
+        navigate('/*')
       }
     };
 
