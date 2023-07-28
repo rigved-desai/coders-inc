@@ -10,7 +10,7 @@ const AddTestCase= ({ isAdmin }) => {
     usePageTitle("Add Test Case");
 
     const {id} = useParams();
-    // Encapsulate all of these in a single object  
+     
     const [testCaseInput, settestCaseInput] = useState('');
     const [testCaseOutput, settestCaseOutput] = useState('');
 

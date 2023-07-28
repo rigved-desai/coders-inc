@@ -14,7 +14,7 @@ import Verdict from './verdict/Verdict';
 import SubmitButton from './submitbutton/SubmitButton';
 import Button from './button/Button';
 
-import { SERVER_BASE_URL } from '../../config';
+import { LANGUAGE_OPTIONS, SERVER_BASE_URL } from '../../config';
 
 const Problem = ({isAdmin}) => {
 
@@ -125,7 +125,9 @@ const Problem = ({isAdmin}) => {
         const data = {
             language: language,
             code: editorValue,
-            input: input
+            input: (input === '' || input === undefined) && (problemData.sampleInput !== '' || problemData.sampleInput !== undefined)
+                    ?  problemData.sampleInput
+                    : input
         }
         const response = await axios.post(`http://localhost:8000/compile`,data, config);
         if(response.data.result.code !== 0) {
@@ -186,14 +188,7 @@ const Problem = ({isAdmin}) => {
                         <div className='editor-header-container'>
                         <Select
                             placeholder={`Select Language`}
-                            //TODO: Define these values in a seperate file and import them here
-                            options={
-                                [
-                                    { value: 'cpp', label: 'C++' },
-                                    { value: 'python', label: 'Python' },
-                                    { value: 'java', label: 'Java' },
-                                ]
-                            }
+                            options={LANGUAGE_OPTIONS}
                             onChange={(selectedOption) => onSelectLanguageChange(selectedOption)}
                         />
                         <ToggleThemeButton className='child' handleToggleMode={handleToggleMode} isDarkMode={isDarkMode} />
@@ -238,6 +233,7 @@ const Problem = ({isAdmin}) => {
                     <Input inputValue={input} handleInputChange={handleInputChange} />
                     <Output outputValue={output} isCompiling={isCompiling} execTime={execTime}/>
                     </div>
+                    <p><strong>Note:</strong> If there is no input passed into the input box, the code will be tested against the sample input for the question.</p>
                 </div>
             </div>
         </>

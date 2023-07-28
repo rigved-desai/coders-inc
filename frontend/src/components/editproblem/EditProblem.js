@@ -9,21 +9,18 @@ const EditProblem = ({ isAdmin }) => {
 
   usePageTitle("Edit Problem")
 
-  // TODO: Encapsulate all of these in a single object
   const {id} = useParams();
-  const [problemName, setProblemName] = useState('');
-  const [problemStatement, setProblemStatement] = useState('');
-  const [problemDifficulty, setProblemDifficulty] = useState('easy');
-  const [sampleInput, setSampleInput] = useState('');
-  const [sampleOutput, setSampleOutput] = useState('');
-  const [tags, setTags] = useState([]);
-  const [errorMessage, setErrorMessage] = useState(null);
-
   const navigate = useNavigate()
-  const handleTagChange = (e) => {
-    const selectedTag = e.target.value;
-    setTags((prevTags) => (prevTags.includes(selectedTag) ? prevTags.filter((tag) => tag !== selectedTag) : [...prevTags, selectedTag]));
-  };
+  
+  const [problemData, setProblemData ] = useState({
+    name: '',
+    statement: '',
+    tags: [],
+    difficulty: 'easy',
+    sampleInput: '',
+    sampleOutput: ''
+}) 
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     const fetchProblemData = async () => {
@@ -35,12 +32,7 @@ const EditProblem = ({ isAdmin }) => {
               },
           };
           const response = await axios.get(`http://localhost:8000/problems/${id}`, config);
-          setProblemName(response.data.name)
-          setProblemStatement(response.data.statement)
-          setProblemDifficulty(response.data.problemDifficulty)
-          setSampleInput(response.data.sampleInput)
-          setSampleOutput(response.data.sampleOutput)
-          setTags(response.data.tags)
+          setProblemData(response.data)
 
       } catch (error) {
           navigate('/*')
@@ -49,6 +41,25 @@ const EditProblem = ({ isAdmin }) => {
   }
   fetchProblemData();
   },[id])
+
+  const handleProblemDataChange = (e) => {
+    const {id, value} = e.target;
+    setProblemData((prevProblemData) => ({
+        ...prevProblemData,
+        [id]: value,
+    }))
+    console.log(problemData)
+  }
+  
+    const handleTagChange = (e) => {
+      const selectedTag = e.target.value;
+      setProblemData((prevProblemData) => ({
+          ...prevProblemData,
+          tags :
+          prevProblemData.tags.includes(selectedTag) ? prevProblemData.tags.filter((tag) => tag !== selectedTag) :
+          [...prevProblemData.tags, selectedTag]
+      }))
+    };
 
 
   const handleSubmit = async (e) => {
@@ -61,22 +72,16 @@ const EditProblem = ({ isAdmin }) => {
             },
            
         };
-        const data = {
-            name : problemName, 
-            statement: problemStatement,
-            tags: tags,
-            difficulty : problemDifficulty,
-            sampleInput : sampleInput,
-            sampleOutput: sampleOutput 
-        }
-        await axios.patch(`${SERVER_BASE_URL}/problems/${id}`,data, config);
-        setProblemName('');
-        setProblemStatement('');
-        setProblemDifficulty('easy');
-        setSampleInput('');
-        setSampleOutput('');
-        setTags([]);
-        setErrorMessage(null);
+        await axios.patch(`${SERVER_BASE_URL}/problems/${id}`,problemData, config);
+
+        setProblemData({
+          name: '',
+          statement: '',
+          tags: [],
+          difficulty: 'easy',
+          sampleInput: '',
+          sampleOutput: ''
+        })
         navigate('/problems');
     }
     catch(error) {
@@ -90,25 +95,29 @@ const EditProblem = ({ isAdmin }) => {
     <div className="add-problem-container">
         <h2>Edit Problem</h2>
       <form className="add-problem-form" onSubmit={handleSubmit}>
-        <label htmlFor="problemName">Problem Name:</label>
+        <label htmlFor="name">Problem Name:</label>
         <input
           type="text"
-          id="problemName"
-          value={problemName}
-          onChange={(e) => setProblemName(e.target.value)}
+          id="name"
+          value={problemData.name}
+          onChange={(e) => handleProblemDataChange(e)}
           required
         />
 
-        <label htmlFor="problemStatement">Problem Statement:</label>
+        <label htmlFor="statement">Problem Statement:</label>
         <textarea
-          id="problemStatement"
-          value={problemStatement}
-          onChange={(e) => setProblemStatement(e.target.value)}
+          id="statement"
+          value={problemData.statement}
+          onChange={(e) => handleProblemDataChange(e)}
           required
         />
 
-        <label htmlFor="problemDifficulty">Problem Difficulty:</label>
-        <select id="problemDifficulty" value={problemDifficulty} onChange={(e) => setProblemDifficulty(e.target.value)}>
+        <label htmlFor="difficulty">Problem Difficulty:</label>
+        <select 
+          id="difficulty"
+          value={problemData.difficulty}
+          onChange={(e) => handleProblemDataChange(e)}
+          >
           <option value="easy">Easy</option>
           <option value="medium">Medium</option>
           <option value="hard">Hard</option>
@@ -117,39 +126,39 @@ const EditProblem = ({ isAdmin }) => {
         <label htmlFor="sampleInput">Sample Input:</label>
         <textarea
           id="sampleInput"
-          value={sampleInput}
-          onChange={(e) => setSampleInput(e.target.value)}
+          value={problemData.sampleInput}
+          onChange={(e) => handleProblemDataChange(e)}
           required
         />
 
         <label htmlFor="sampleOutput">Sample Output:</label>
         <textarea
           id="sampleOutput"
-          value={sampleOutput}
-          onChange={(e) => setSampleOutput(e.target.value)}
+          value={problemData.sampleOutput}
+          onChange={(e) => handleProblemDataChange(e.target.value)}
           required
         />
 
         <label>Tags:</label>
         <div className="tags-container">
           <label>
-            <input type="checkbox" value="greedy" checked={tags.includes('greedy')} onChange={handleTagChange} />
+            <input type="checkbox" value="greedy" checked={problemData.tags.includes('greedy')} onChange={handleTagChange} />
             Greedy
           </label>
           <label>
-            <input type="checkbox" value="dp" checked={tags.includes('dp')} onChange={handleTagChange} />
+            <input type="checkbox" value="dp" checked={problemData.tags.includes('dp')} onChange={handleTagChange} />
             DP
           </label>
           <label>
-            <input type="checkbox" value="constructive algorithms" checked={tags.includes('constructive algorithms')} onChange={handleTagChange} />
+            <input type="checkbox" value="constructive algorithms" checked={problemData.tags.includes('constructive algorithms')} onChange={handleTagChange} />
             Constructive Algorithms
           </label>
           <label>
-            <input type="checkbox" value="graphs" checked={tags.includes('graphs')} onChange={handleTagChange} />
+            <input type="checkbox" value="graphs" checked={problemData.tags.includes('graphs')} onChange={handleTagChange} />
             Graphs
           </label>
           <label>
-            <input type="checkbox" value="number theory" checked={tags.includes('number theory')} onChange={handleTagChange} />
+            <input type="checkbox" value="number theory" checked={problemData.tags.includes('number theory')} onChange={handleTagChange} />
             Number Theory
           </label>
         </div>
