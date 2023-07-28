@@ -1,6 +1,6 @@
 module.exports = {
     PORT: process.env.PORT || 8000,
-    SESSION_SECRET: process.env.SESSION_SECRET,
+    JWT_SECRET: process.env.JWT_SECRET,
     MONGO_USER: process.env.MONGO_USER,
     MONGO_PASSWORD: process.env.MONGO_PASSWORD,
     CODE_COMPILATION_FAILED: process.env.CODE_COMPILATION_FAILED,

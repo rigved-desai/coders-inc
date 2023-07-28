@@ -1,20 +1,28 @@
-import axios from 'axios';
+import './UserProfile.css'
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { SERVER_BASE_URL } from '../../config';
+import axios from 'axios';
+
+import ProblemsSolvedTable from './problemssolvedtable/ProblemsSolvedTable';
 import SolveCounter from './solvecounter/SolveCounter';
 import SubmissionCounter from './submissioncounter/SubmissionCounter';
-import './UserProfile.css'
+
+import { SERVER_BASE_URL } from '../../config';
+import usePageTitle from '../../hooks/usePageTitle';
 
 const UserProfile = () => {
 
     const { username } = useParams();
+
+    usePageTitle(`${username} - Coders Inc.`)
+
     const [userDetails, setuserDetails] = useState({
         username: '',
         numberOfSolves: '',
-        numberOfSubmissions: ''
+        numberOfSubmissions: '',
+        problemsSolved: []
     })
-
+    
     const naviagate = useNavigate();
 
     useEffect(() => {
@@ -27,15 +35,12 @@ const UserProfile = () => {
                     },
                 };
                 const response = await axios.get(`${SERVER_BASE_URL}/users/${username}`, config);
-                console.log(response.data)
                 if(!response.data) {
                     naviagate('/*')
                 }
                 setuserDetails(response.data)
-                console.log(response.data)
             }
             catch (error) {
-                console.log("Error fetching user data", error)
                 naviagate('/*')
             }
         }
@@ -51,6 +56,8 @@ const UserProfile = () => {
                 <SubmissionCounter numberOfSubmissions={userDetails.numberOfSubmissions}/>
                 <SolveCounter numberOfSolves={userDetails.numberOfSolves}/>
             </div>
+            <br/>
+            <ProblemsSolvedTable problemsSolved={userDetails.problemsSolved}/>
         </>
     )
 }

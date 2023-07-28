@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import './Home.css'
 import axios from 'axios'
-import Button from './Button/Button';
+import HomeButton from './HomeButton/HomeButton';
 import { SERVER_BASE_URL } from '../../config';
+import usePageTitle from '../../hooks/usePageTitle';
 
 const Home = () => {
+
+  usePageTitle("Coders Inc.")
 
     const [username, setUsername] = useState('')
 
@@ -18,7 +21,6 @@ const Home = () => {
                   },
                 };
               const response = await axios.get(`${SERVER_BASE_URL}/`, config);
-              console.log(response.data)
               setUsername(response.data.username); 
             } catch (error) {
               console.error('Error fetching user data:', error); 
@@ -32,9 +34,9 @@ const Home = () => {
         <>
         <h1>Welcome back, {username}</h1>
         <div className='home-buttons'>
-        <Button label={"PROBLEMS"} goTo={'problems'}/>
-        <Button label={"LEADERBOARD"} goTo={'leaderboard'}/>
-        <Button label={"PROFILE"} goTo={`users/${username}`}/>
+          <HomeButton label={"PROBLEMS"} goTo={'problems'}/>
+          <HomeButton label={"LEADERBOARD"} goTo={'leaderboard'}/>
+          <HomeButton label={"PROFILE"} goTo={`users/${username}`}/>
         </div>
         </>
     )

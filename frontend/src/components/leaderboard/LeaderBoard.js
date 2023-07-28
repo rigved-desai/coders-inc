@@ -3,8 +3,12 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import './LeaderBoard.css'
 import { SERVER_BASE_URL } from '../../config';
+import usePageTitle from '../../hooks/usePageTitle';
 
 const LeaderBoard = () => {
+
+  usePageTitle("Leaderboard - Coders Inc.")
+
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -37,11 +41,12 @@ const LeaderBoard = () => {
     <h1>Leaderboard</h1>
     <div>
       {loading ? (
-        <div>Loading...</div> // Show loading spinner while data is being fetched
+        <div>Loading...</div> 
       ) : ( 
         <table className='custom-table'>
           <thead>
             <tr className='leaderboard-tr'>
+              <th>Position</th>
               <th className='leaderboard-th'>Username</th>
               <th className='leaderboard-th'>Number of Solves</th>
             </tr>
@@ -49,6 +54,7 @@ const LeaderBoard = () => {
           <tbody>
             {leaderboardData.map((item, index) => (
               <tr key={index} className='leaderboard-tr'>
+                <td>{index+1}</td>
                 <td className='leaderboard-column1'><Link to={`/users/${item.username}`} className='leaderboard-a'>{item.username}</Link></td>
                 <td className='leaderboard-column2'>{item.numberOfSolves}</td>
               </tr>

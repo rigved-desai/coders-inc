@@ -1,4 +1,4 @@
-.button {
+.home-button {
     margin-left: 20px;
     margin-right: 20px;
     font-family: 'Cascadia Code';
@@ -16,12 +16,12 @@
     transition: transform 0.2s, box-shadow 0.2s;
   }
   
-  .button:hover {
+  .home-button:hover {
     transform: scale(1.05);
     box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
   }
   
-  .button:active {
+  .home-button:active {
     transform: scale(0.95);
     box-shadow: none;
   }

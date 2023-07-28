@@ -1,4 +1,3 @@
-import React from 'react';
 import './SolveCounter.css'; 
 
 const SolveCounter = ({ numberOfSolves }) => {

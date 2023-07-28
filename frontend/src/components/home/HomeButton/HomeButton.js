@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Button.css'; 
+import './HomeButton.css'; 
 
-const Button = ({ label, goTo }) => {
+const HomeButton = ({ label, goTo }) => {
   const [isPressed, setIsPressed] = useState(false);
     const navigate = useNavigate()
 
@@ -18,7 +18,7 @@ const Button = ({ label, goTo }) => {
 
   return (
     <button
-      className={`button ${isPressed ? 'pressed' : ''}`}
+      className={`home-button ${isPressed ? 'pressed' : ''}`}
       onClick={handleClick}
     >
       {label}
@@ -26,4 +26,4 @@ const Button = ({ label, goTo }) => {
   );
 };
 
-export default Button;
+export default HomeButton;

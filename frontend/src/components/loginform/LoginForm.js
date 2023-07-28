@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './LoginForm.css'
-import { useNavigate} from 'react-router-dom';
+import { useNavigate, useLocation, Link} from 'react-router-dom';
 import { SERVER_BASE_URL } from '../../config';
+import usePageTitle from '../../hooks/usePageTitle';
 
 const LoginForm = () => {
+
+  usePageTitle("Login - Coders Inc.")
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState(null)
   const navigate = useNavigate()
+  const location = useLocation();
+  const from = location.state?.from?.pathname || '/';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,17 +25,14 @@ const LoginForm = () => {
       
       const authHeader = response.headers['authorization'];
         if(authHeader === undefined)  {
-            console.log(response.data.message)
             setErrorMessage(response.data.message)
             return;
         }
       const token = authHeader ? authHeader.split(' ')[1] : null;
-      console.log(token)
       if(token !== undefined) {
-        console.log(token)
         localStorage.setItem('token', token);
       }
-      navigate('/');
+      navigate(from, {replace: true});
     } catch (error) {
       console.error(error.message);
     }
@@ -39,8 +42,7 @@ const LoginForm = () => {
     <>
     <h1>Login</h1>
     <h3>Login and start coding!</h3>
-    <form onSubmit={handleSubmit}>
-      <div>
+    <form className='login-form' onSubmit={handleSubmit}>
         <label htmlFor="email">Email:</label>
         <input
           type="email"
@@ -48,8 +50,6 @@ const LoginForm = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-      </div>
-      <div>
         <label htmlFor="password">Password:</label>
         <input
           type="password"
@@ -57,11 +57,10 @@ const LoginForm = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-      </div>
-      <button type="submit">Login</button>
+      <button className='login-button' type="submit">Login</button>
       {errorMessage !== null ? (<p>{errorMessage}</p>):(<></>)}
+      <p><Link to={'/register'}> Don't have an account? Click here to register!</Link></p>
     </form>
-
     </>
   );
 };

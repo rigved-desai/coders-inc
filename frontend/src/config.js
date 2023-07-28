@@ -1,3 +1,6 @@
 module.exports  ={
-    SERVER_BASE_URL: "http://localhost:8000"
+    SERVER_BASE_URL: process.env.REACT_APP_SERVER_BASE_URL,
+    USERNAME_REGEX: /^[A-Za-z0-9_-]{4,20}$/ ,
+    PWD_REGEX : /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*(){}|`~<>?,./;':"_+-=]).{8,24}$/
+    
 }

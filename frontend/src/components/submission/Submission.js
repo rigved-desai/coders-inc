@@ -3,11 +3,16 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import './Submission.css'
 import axios from 'axios';
+
 import { SERVER_BASE_URL } from '../../config';
+import usePageTitle from '../../hooks/usePageTitle';
 
 const Submission = () => {
-
+    
     const {id} = useParams();
+
+    usePageTitle(`Submission ${id} - Coders Inc.`)
+    
     const [submissionDetails, setSubmissionDetails] = useState({
         problemName: '',
         problemID: '',
@@ -67,6 +72,9 @@ const Submission = () => {
             value={submissionDetails.code}
             theme={'vs-light'}
             options={{
+                minimap: {
+                    enabled: false
+                },
                 fontSize: "16px",
                 readOnly: true
             }}

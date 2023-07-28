@@ -1,3 +1,5 @@
+//TODO : DEFINE ALL API calls here and export them wherever needed 
+
 import axios from "axios";
 const BASE_URL = "http://localhost:3000/"
 

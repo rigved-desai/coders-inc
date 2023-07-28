@@ -2,41 +2,59 @@ h1, h3 {
     text-align: center;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #f9f9f9;
-  }
-  
-  form div {
-    margin-bottom: 10px;
-  }
-  
-  form label {
-    font-weight: bold;
-  }
-  
-  form input {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  form button {
-    padding: 10px;
-    background-color: #468b97;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  form button:hover {
-    background-color: #335f6b;
-  }
-  
+.login-form {
+  font-family: 'Cascadia Code';
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-form label {
+  color: black;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.login-form input[type="text"],
+.login-form textarea,
+.login-form select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border: 1px solid black;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: black;
+  resize: vertical;
+}
+
+.login-form p  {
+  font-family: 'Titillium Web';
+  text-align: center;
+  font-size: 16px;
+}
+
+.login-form p a {
+  text-decoration: none;
+}
+
+.login-form select {
+  background-color: white;
+}
+
+.login-button {
+  margin-top: 20px;
+  font-family: 'Cascadia Code';
+  background-color: black;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.login-button:hover {
+  background-color: #333;
+}
+

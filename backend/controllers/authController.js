@@ -5,9 +5,9 @@ const jwt = require('jsonwebtoken')
 
 const generateToken = (payload) => {
     const options = {
-        expiresIn: '1h'
+        expiresIn: '12h'
     }
-    const token = jwt.sign(payload, process.env.SESSION_SECRET, options)
+    const token = jwt.sign(payload, process.env.JWT_SECRET, options)
     return token
 }
 
@@ -49,7 +49,7 @@ exports.loginUser = async (req, res, next) => {
         }
         if (await bcyrpt.compare(password, user.password)) {
             req.user = user.username
-            const token = generateToken({ id: user._id, username: user.username})
+            const token = generateToken({ id: user._id, username: user.username, role: user.role })
             res.set('Authorization', 'Bearer ' + token);
             next()
         }

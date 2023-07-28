@@ -1,9 +1,12 @@
-import React from 'react'
+import usePageTitle from '../../../hooks/usePageTitle';
 import './ProblemDesc.css'
 
 function ProblemDesc(props) {
+
     const {name, statement, tags, sampleInput, sampleOutput} = props.data;
-    console.log(sampleInput)
+
+    usePageTitle(`${name} - Coders Inc.`)
+
     return (
         <>
         <p className='problem-title'>{name}</p>
@@ -34,7 +37,7 @@ function ProblemDesc(props) {
         <table className='sampleio-table'>
             <th>Tags</th>
             <tr>
-                <td>{tags}</td>
+                <td>{tags.join(', ')}</td>
             </tr>
         </table>
         </>

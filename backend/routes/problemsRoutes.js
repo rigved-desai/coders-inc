@@ -7,7 +7,7 @@ const problemsController = require('../controllers/problemsController')
 router
     .route('/')
         .get(protect.allProtect, problemsController.getAllProblems)
-        .post(protect.adminProtect, problemsController.addProblem)
+        .post(protect.allProtect, protect.adminProtect, problemsController.addProblem)
     
 router
     .route('/:id')

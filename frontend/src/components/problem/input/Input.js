@@ -1,5 +1,4 @@
-import React from 'react';
-import './Input.css'; // Import the CSS file for the component
+import './Input.css';
 
 const Input = ({inputValue, handleInputChange}) => {
 

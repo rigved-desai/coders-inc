@@ -1,5 +1,4 @@
-import React from 'react';
-import './SubmissionCounter.css'; // Make sure to update the CSS filename accordingly
+import './SubmissionCounter.css'; 
 
 const SubmissionCounter = ({ numberOfSubmissions }) => {
   return (

@@ -15,7 +15,7 @@
       font-size: 18px;
   }
   
-  .submission-details {
+  .verdict-box a .submission-details {
       color: #000;
     margin-left: 10px;
   }

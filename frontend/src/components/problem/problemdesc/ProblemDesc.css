@@ -1,11 +1,14 @@
 .problem-title {
     text-align: center;
-    font-size: 5vh;
+    font-size: 2.5rem;
     font-weight: bold;
     font-family: 'Titillium Web';
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 .problem-statement {
+    white-space: pre-line;
     justify-content: center;
     padding-left: 50px;
     padding-right: 50px;

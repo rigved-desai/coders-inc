@@ -2,9 +2,13 @@ import './SubmissionList.css'
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+
 import { SERVER_BASE_URL } from '../../config';
+import usePageTitle from '../../hooks/usePageTitle';
 
 const SubmissionList = () => {
+
+  usePageTitle("Submissions - Coders Inc.");
 
     const [submissionList, setSubmissionList] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -55,7 +59,8 @@ const SubmissionList = () => {
     <div>
       {loading ? (
         <div>Loading...</div> 
-      ) : ( 
+      ) : (
+        submissionList && submissionList.length > 0  ?
         <table className='custom-table2'>
           <thead>
             <tr>
@@ -86,7 +91,7 @@ const SubmissionList = () => {
             ))}
           </tbody>
         </table>
-      )}
+      : <h2>No submissions found!</h2>)}
     </div>
         </>
     )

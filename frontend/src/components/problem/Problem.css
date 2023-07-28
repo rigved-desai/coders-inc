@@ -18,14 +18,14 @@
 }
 
 .child-container .code-title {
-    font-size: 5vh;
+    font-size: 2.5rem;
     font-family: 'Titillium Web';
     font-weight: bold;
     align-content: center;
 
 }
 .editor-container {
-    resize: vertical;
+    resize: none;
     overflow:hidden;
     border: 5px solid #ccc;
     border-radius: 5px;
@@ -37,4 +37,11 @@
       flex-basis: 100%; 
       min-width: 0; 
     }
+}
+
+.btn-container {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-evenly;
 }

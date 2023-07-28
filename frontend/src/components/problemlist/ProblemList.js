@@ -1,10 +1,16 @@
 import './ProblemList.css'
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import { SERVER_BASE_URL } from '../../config';
+import axios from 'axios';
 
-const ProblemList = () => {
+import Button from './Button/Button';
+
+import { SERVER_BASE_URL } from '../../config';
+import usePageTitle from '../../hooks/usePageTitle';
+
+const ProblemList = ({isAdmin}) => {
+
+    usePageTitle("Problems - Coders Inc.")
 
     const [problemList, setProblemList] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -54,13 +60,16 @@ const ProblemList = () => {
               <tr key={index}>
                 <td className='column1'><Link to={`/problems/${item._id}`}>{item.name}</Link></td>
                 <td>{item.difficulty}</td>
-                <td>{item.tags}</td>
-                <td className='column2'>{item.numberOfSolves}</td>
+                <td>{item.tags.join(', ')}</td>
+                <td className='column2'><Link to={`/problems/${item._id}/submissions`}>x{item.numberOfSolves}</Link></td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
+      {isAdmin ? <div className='btn-container'>
+        <Button label={"ADD PROBLEM"} goTo={'problems/add'}/>
+      </div> : <></>}
     </div>
     </>
     )

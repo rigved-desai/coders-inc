@@ -1,8 +1,9 @@
 import './Problem.css'
-import ProblemDesc from './problemdesc/ProblemDesc';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
+
+import ProblemDesc from './problemdesc/ProblemDesc';
 import Editor from "@monaco-editor/react"
 import Select from "react-select";
 import ToggleThemeButton from './togglethemebutton/ToggleThemeButton';
@@ -11,9 +12,12 @@ import Input from './input/Input';
 import Output from './output/Output';
 import Verdict from './verdict/Verdict';
 import SubmitButton from './submitbutton/SubmitButton';
+import Button from './button/Button';
+
 import { SERVER_BASE_URL } from '../../config';
 
-const Problem = () => {
+const Problem = ({isAdmin}) => {
+
     let { id } = useParams();
     const [problemData, setProblemData] = useState(null);
 
@@ -130,7 +134,6 @@ const Problem = () => {
         } 
         else {
             setOutput(response.data.result.message);
-            console.log(response.data.result.timeTaken)
             setExecTime(`${response.data.result.timeTaken}ms`)
         }
 
@@ -172,6 +175,10 @@ const Problem = () => {
             <div className='parent-container'>
                 <div className='child-container'>
                     {problemData ? <ProblemDesc data={problemData} /> : <div>Problem data loading...</div>}
+                    {isAdmin ? <div className='btn-container'>
+                        <Button className='edit-btns' label={"EDIT PROBLEM"} goTo={`problems/${id}/edit`}/>
+                        <Button className='edit-btns' label={"ADD TESTCASE"} goTo={`problems/${id}/addtc`}/>
+                    </div>: <></>}
                 </div>
                 <div className='child-container'>
                     <p className='code-title'>Code here!</p>
@@ -179,6 +186,7 @@ const Problem = () => {
                         <div className='editor-header-container'>
                         <Select
                             placeholder={`Select Language`}
+                            //TODO: Define these values in a seperate file and import them here
                             options={
                                 [
                                     { value: 'cpp', label: 'C++' },
@@ -196,14 +204,17 @@ const Problem = () => {
                     <div className='editor-container'>
                         <Editor
                             fontSize='16px'
-                            height="60vh"
+                            height="65vh"
                             width={`100%`}
                             language={language}
                             value={editorValue}
                             onChange={handleEditorChange}
                             theme={isDarkMode ? 'vs-dark' : 'vs-light'}
-                            defaultValue="// some comment"
+                            defaultValue="// Happy coding! :)"
                             options={{
+                                minimap: {
+                                    enabled: false
+                                },
                                 fontSize: "16px"
                             }}
                         />

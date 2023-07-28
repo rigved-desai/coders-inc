@@ -10,7 +10,7 @@ exports.allProtect = (req, res, next) => {
 
     const token = authHeader.split(' ')[1];
     try  {
-        const decodedInfo = jwt.verify(token, process.env.SESSION_SECRET)
+        const decodedInfo = jwt.verify(token, process.env.JWT_SECRET)
         req.user = decodedInfo.username
         req.userid = decodedInfo.id.valueOf()
         next()
@@ -30,7 +30,7 @@ exports.personalProtect = async (req, res, next) => {
     const profile = await User.findOne({username: req.params.uname})
     const token = authHeader.split(' ')[1];
     try  {
-        const decodedInfo = jwt.verify(token, process.env.SESSION_SECRET)
+        const decodedInfo = jwt.verify(token, process.env.JWT_SECRET)
         if(decodedInfo.id == profile._id.valueOf()) {
             next()
         }
@@ -51,7 +51,7 @@ exports.adminProtect = async (req, res, next) => {
 
     const token = authHeader.split(' ')[1];
     try  {
-        const decodedInfo = jwt.verify(token, process.env.SESSION_SECRET)
+        const decodedInfo = jwt.verify(token, process.env.JWT_SECRET)
         const profile = await User.findOne({username: decodedInfo.username})
         if(profile.role == "admin") {
             next()
