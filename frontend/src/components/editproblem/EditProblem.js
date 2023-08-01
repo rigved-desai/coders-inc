@@ -31,7 +31,7 @@ const EditProblem = ({ isAdmin }) => {
                   'Authorization': `Bearer ${token}`,
               },
           };
-          const response = await axios.get(`http://localhost:8000/problems/${id}`, config);
+          const response = await axios.get(`${SERVER_BASE_URL}/problems/${id}`, config);
           setProblemData(response.data)
 
       } catch (error) {

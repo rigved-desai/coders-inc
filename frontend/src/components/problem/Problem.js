@@ -129,7 +129,7 @@ const Problem = ({isAdmin}) => {
                     ?  problemData.sampleInput
                     : input
         }
-        const response = await axios.post(`http://localhost:8000/compile`,data, config);
+        const response = await axios.post(`${SERVER_BASE_URL}/compile`,data, config);
         if(response.data.result.code !== 0) {
             setOutput("Compilation Error");
             setExecTime(`${response.data.result.timeTaken}ms`)
@@ -160,7 +160,7 @@ const Problem = ({isAdmin}) => {
                         'Authorization': `Bearer ${token}`,
                     },
                 };
-                const response = await axios.get(`http://localhost:8000/problems/${id}`, config);
+                const response = await axios.get(`${SERVER_BASE_URL}/problems/${id}`, config);
                 setProblemData(response.data)
 
             } catch (error) {
