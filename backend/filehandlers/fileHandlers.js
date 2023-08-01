@@ -89,6 +89,14 @@ exports.saveFile = (language, code, input) => {
 
 exports.executeFile = async(exePath, language, inputPath) => {
 
+    docker.ping((err, data) => {
+        if (err) {
+          console.error('Docker engine is not running:', err);
+        } else {
+          console.log('Docker engine is running:', data);
+        }
+      });
+
     try {
         console.log(`starting to create docker container at: ${Date.now().toString()}` )
         const container = await createContainer(language)
