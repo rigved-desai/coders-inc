@@ -41,7 +41,7 @@
 
 @font-face {
   font-family: 'Cascadia Code';
-  src: url('public/Cascadia Code PL Regular 400.otf') format('opentype');
+  src: url('../public/Cascadia Code PL Regular 400.otf') format('opentype');
 }
 
 ::-webkit-scrollbar {
