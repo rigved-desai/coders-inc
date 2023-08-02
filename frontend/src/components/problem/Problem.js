@@ -15,6 +15,7 @@ import SubmitButton from './submitbutton/SubmitButton';
 import Button from './button/Button';
 
 import { LANGUAGE_OPTIONS, SERVER_BASE_URL } from '../../config';
+import Preloader from '../preloader/Preloader';
 
 const Problem = ({isAdmin}) => {
 
@@ -177,7 +178,7 @@ const Problem = ({isAdmin}) => {
         <>
             <div className='parent-container'>
                 <div className='child-container'>
-                    {problemData ? <ProblemDesc data={problemData} /> : <div>Problem data loading...</div>}
+                    {problemData ? <ProblemDesc data={problemData} /> : <Preloader/>}
                     {isAdmin ? <div className='btn-container'>
                         <Button className='edit-btns' label={"EDIT PROBLEM"} goTo={`problems/${id}/edit`}/>
                         <Button className='edit-btns' label={"ADD TESTCASE"} goTo={`problems/${id}/addtc`}/>

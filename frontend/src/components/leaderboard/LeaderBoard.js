@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './LeaderBoard.css'
 import { SERVER_BASE_URL } from '../../config';
 import usePageTitle from '../../hooks/usePageTitle';
+import Preloader from '../preloader/Preloader';
 
 const LeaderBoard = () => {
 
@@ -41,7 +42,7 @@ const LeaderBoard = () => {
     <h1>Leaderboard</h1>
     <div>
       {loading ? (
-        <div>Loading...</div> 
+         <Preloader/>
       ) : ( 
         <table className='custom-table'>
           <thead>
