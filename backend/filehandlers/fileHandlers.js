@@ -116,7 +116,7 @@ exports.executeFile = async(exePath, language, inputPath) => {
         pack.entry({ name: `${folderName}/inputFile.txt` }, inputContent);
         pack.finalize();
 
-        container.putArchive(pack, { path: "/" })
+        await container.putArchive(pack, { path: "/" })
         console.log(`starting docker container at: ${Date.now().toString()}` )
         await container.start()
         console.log(`started docker container at: ${Date.now().toString()}` )
