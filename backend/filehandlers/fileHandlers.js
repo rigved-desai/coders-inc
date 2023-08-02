@@ -137,6 +137,7 @@ exports.executeFile = async(exePath, language, inputPath) => {
                 }
                 console.log("execution finished!")
                 console.log("EXIT CODE:", StatusCode)
+                console.log(stream.toString())
                 // container.remove()
                 resolve({
                     message: stream !== undefined ? stream.toString() : "Error",
@@ -155,7 +156,6 @@ exports.executeFile = async(exePath, language, inputPath) => {
             timeTaken: execTime !== undefined ? execTime : 0
         });
     }
-
 }
 
 
