@@ -130,6 +130,7 @@ const Problem = ({isAdmin}) => {
                     : input
         }
         const response = await axios.post(`${SERVER_BASE_URL}/compile`,data, config);
+        console.log(response,data);
         if(response.data.result.code !== 0) {
             setOutput("Compilation Error");
             setExecTime(`${response.data.result.timeTaken}ms`)
