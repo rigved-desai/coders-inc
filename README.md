@@ -32,6 +32,11 @@ It currently supports three languages:
 ### - Database: 
   - MongoDB Atlas
 
+## Deployment
+A test version of this website has been currrently deployed using AWS EC2 and S3. Copy and paste the link given below in your browser to check it out
+```
+http://codersinc-test-1.s3-website.ap-south-1.amazonaws.com
+```
 
 
 
