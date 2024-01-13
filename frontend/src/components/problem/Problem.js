@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 
-import ProblemDesc from './problemdesc/ProblemDesc';
 import Editor from "@monaco-editor/react"
 import Select from "react-select";
 import ToggleThemeButton from './togglethemebutton/ToggleThemeButton';
@@ -15,6 +14,7 @@ import SubmitButton from './submitbutton/SubmitButton';
 import Button from './button/Button';
 
 import { LANGUAGE_OPTIONS, SERVER_BASE_URL } from '../../config';
+import Preloader from '../preloader/Preloader';
 
 const Problem = ({isAdmin}) => {
 
@@ -170,13 +170,13 @@ const Problem = ({isAdmin}) => {
             }
         }
         fetchProblemData();
-    }, [id])
+    }, [id, navigate])
 
     return (
         <>
             <div className='parent-container'>
                 <div className='child-container'>
-                    {problemData ? <ProblemDesc data={problemData} /> : <div>Problem data loading...</div>}
+                    {problemData ? <Preloader/> : <Preloader/>}
                     {isAdmin ? <div className='btn-container'>
                         <Button className='edit-btns' label={"EDIT PROBLEM"} goTo={`problems/${id}/edit`}/>
                         <Button className='edit-btns' label={"ADD TESTCASE"} goTo={`problems/${id}/addtc`}/>

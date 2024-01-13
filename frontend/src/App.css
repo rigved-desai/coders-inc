@@ -39,6 +39,50 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;400&display=swap');
 
+form {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+form div {
+  margin-bottom: 10px;
+}
+
+form label {
+  font-weight: bold;
+}
+
+form input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) and (min-width: 421px) {
+
+  form {
+    width: 50%;
+  }
+}
+
+@media (max-width: 420px) {
+
+  form {
+    width: 50%;
+  }
+
+  form input {
+    width: 75%;
+  }
+
+}
+
 ::-webkit-scrollbar {
   width: 1em;
 }

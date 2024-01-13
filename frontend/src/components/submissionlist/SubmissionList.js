@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import { SERVER_BASE_URL } from '../../config';
 import usePageTitle from '../../hooks/usePageTitle';
+import Preloader from '../preloader/Preloader';
 
 const SubmissionList = () => {
 
@@ -58,7 +59,7 @@ const SubmissionList = () => {
         <h1 style={{fontFamily: 'Titillium Web'}}>Submissions</h1>
     <div>
       {loading ? (
-        <div>Loading...</div> 
+        <Preloader/>
       ) : (
         submissionList && submissionList.length > 0  ?
         <table className='custom-table2'>

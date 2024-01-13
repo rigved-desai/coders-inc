@@ -64,7 +64,6 @@
     .nav-element ul {
         display: none;
         flex-direction: column;
-        width: 100%;
         margin-bottom: 0.25rem;
     }
 

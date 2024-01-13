@@ -40,7 +40,7 @@ const EditProblem = ({ isAdmin }) => {
       }
   }
   fetchProblemData();
-  },[id])
+  },[id, navigate])
 
   const handleProblemDataChange = (e) => {
     const {id, value} = e.target;

@@ -23,8 +23,8 @@ const UserProfile = () => {
         problemsSolved: []
     })
     
-    const naviagate = useNavigate();
-
+    const navigate = useNavigate();
+    
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
@@ -36,17 +36,17 @@ const UserProfile = () => {
                 };
                 const response = await axios.get(`${SERVER_BASE_URL}/users/${username}`, config);
                 if(!response.data) {
-                    naviagate('/*')
+                    navigate('/*')
                 }
                 setuserDetails(response.data)
             }
             catch (error) {
-                naviagate('/*')
+                navigate('/*')
             }
         }
 
         fetchUserDetails()
-    }, [username])
+    }, [username, navigate])
 
 
     return (
