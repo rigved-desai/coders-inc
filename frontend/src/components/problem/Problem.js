@@ -130,6 +130,7 @@ const Problem = ({isAdmin}) => {
                     : input
         }
         const response = await axios.post(`${SERVER_BASE_URL}/compile`,data, config);
+        console.log(response,data);
         if(response.data.result.code !== 0) {
             setOutput("Compilation Error");
             setExecTime(`${response.data.result.timeTaken}ms`)
@@ -176,7 +177,7 @@ const Problem = ({isAdmin}) => {
         <>
             <div className='parent-container'>
                 <div className='child-container'>
-                    {problemData ? <Preloader/> : <Preloader/>}
+                    {problemData ? <ProblemDesc data={problemData} /> : <Preloader/>}
                     {isAdmin ? <div className='btn-container'>
                         <Button className='edit-btns' label={"EDIT PROBLEM"} goTo={`problems/${id}/edit`}/>
                         <Button className='edit-btns' label={"ADD TESTCASE"} goTo={`problems/${id}/addtc`}/>

@@ -117,7 +117,7 @@ exports.executeFile = async(exePath, language, inputPath) => {
         pack.entry({ name: `${folderName}/inputFile.txt` }, inputContent);
         pack.finalize();
 
-        container.putArchive(pack, { path: "/" })
+        await container.putArchive(pack, { path: "/" })
         console.log(`starting docker container at: ${Date.now().toString()}` )
         await container.start()
         console.log(`started docker container at: ${Date.now().toString()}` )
@@ -129,7 +129,7 @@ exports.executeFile = async(exePath, language, inputPath) => {
             container.logs({stdout: true, stderr: false,},  (err, stream) => {
                 if(err) {
                     console.log(err.message)
-                    container.remove();
+                    // container.remove();
                     reject({
                         message: err.message,
                         code: StatusCode,
@@ -137,7 +137,9 @@ exports.executeFile = async(exePath, language, inputPath) => {
                     });
                 }
                 console.log("execution finished!")
-                container.remove()
+                console.log("EXIT CODE:", StatusCode)
+                console.log(stream.toString())
+                // container.remove()
                 resolve({
                     message: stream !== undefined ? stream.toString() : "Error",
                     code: StatusCode,
@@ -155,7 +157,6 @@ exports.executeFile = async(exePath, language, inputPath) => {
             timeTaken: execTime ? execTime : 0
         });
     }
-
 }
 
 

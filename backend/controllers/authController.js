@@ -2,6 +2,7 @@ const User = require('../models/userModel.js')
 const mongoose = require('mongoose')
 const bcyrpt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const { USERNAME_REGEX, PWD_REGEX } = require('../config/config.js')
 
 const generateToken = (payload) => {
     const options = {
@@ -15,6 +16,26 @@ exports.registerUser = async (req, res, next) => {
 
     //check for username and email existing in db first
     const { username, email, password } = req.body;
+
+    const _USERNAME_REGEX = new RegExp(USERNAME_REGEX);
+    const _PWD_REGEX = new RegExp(PWD_REGEX)
+
+    if(!_USERNAME_REGEX.test(username)) {
+
+        return res.status(200).json({
+            status: "fail",
+            message: "Invalid username. Should consist of atleast 4 characters and at most 20 characters. No special characters except underscores and hyphens allowed."
+        })
+      }
+
+      if(!_PWD_REGEX.test(password)) {
+
+        return res.status(200).json({
+            status: "fail",
+            message: "Invalid password. Should consist of at least 8 characters, 1 uppercase character, 1 lowercase character, 1 number and 1 symbol."
+        })
+      }
+    
     try {
         const hashedPassword = await bcyrpt.hash(password, 10)
         const user = await User.create({
