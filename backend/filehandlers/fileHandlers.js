@@ -129,7 +129,7 @@ exports.executeFile = async(exePath, language, inputPath) => {
             container.logs({stdout: true, stderr: false,},  (err, stream) => {
                 if(err) {
                     console.log(err.message)
-                    // container.remove();
+                    container.remove();
                     reject({
                         message: err.message,
                         code: StatusCode,
@@ -139,7 +139,7 @@ exports.executeFile = async(exePath, language, inputPath) => {
                 console.log("execution finished!")
                 console.log("EXIT CODE:", StatusCode)
                 console.log(stream.toString())
-                // container.remove()
+                container.remove()
                 resolve({
                     message: stream !== undefined ? stream.toString() : "Error",
                     code: StatusCode,
