@@ -2,6 +2,7 @@ import './Problem.css'
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
+import io from 'socket.io-client';
 
 import ProblemDesc from './problemdesc/ProblemDesc';
 import Editor from "@monaco-editor/react"
@@ -15,12 +16,16 @@ import SubmitButton from './submitbutton/SubmitButton';
 import Button from './button/Button';
 
 import { LANGUAGE_OPTIONS, SERVER_BASE_URL } from '../../config';
+import Preloader from '../preloader/Preloader';
+
+const { v4: uuidv4 } = require('uuid');
 
 const Problem = ({isAdmin}) => {
 
     let { id } = useParams();
     const [problemData, setProblemData] = useState(null);
 
+    
     const [language, setLanguage] = useState(null);
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [editorValue, setEditorValue] = useState('');
@@ -34,11 +39,13 @@ const Problem = ({isAdmin}) => {
     const [isSubmitting, setIsSubmitting]  = useState(false)
     const [execTime, setExecTime] = useState(null)
     
-
+    const [sessionID] = useState(uuidv4());
+    const [liveTestStatus, setLiveTestStatus] = useState(null);
+    
     const [verdict, setVerdict] = useState(null)
     const [isAccepted, setIsAccepted] = useState(false)
     const [submissionID, setSubmissionID] = useState(null)
-
+    
 
     const outputRef = useRef(null);
     const verdictRef = useRef(null);
@@ -79,7 +86,8 @@ const Problem = ({isAdmin}) => {
             };
             const data = {
                 language: language,
-                code: editorValue
+                code: editorValue,
+                sessionID: sessionID
             }
             const response = await axios.post(`${SERVER_BASE_URL}/problems/${id}/submit`,data, config);
             if(response.data.verdict === 1)  {
@@ -96,11 +104,13 @@ const Problem = ({isAdmin}) => {
         } catch (error) {
             verdictRef.current?.scrollIntoView({ behavior: 'smooth' });
             setVerdict("Error submitting code!")
-            setIsAccepted(false)
-            setIsSubmitting(false)
+            setIsAccepted(false);
+            setIsSubmitting(false);
+            setLiveTestStatus(null);
             console.error('Error submitting data:', error);
         }
-        setIsSubmitting(false)
+        setIsSubmitting(false);
+        setLiveTestStatus(null);
     };
 
 
@@ -169,14 +179,29 @@ const Problem = ({isAdmin}) => {
                 
             }
         }
+        
+        const socket = io(SERVER_BASE_URL, {
+            query: {
+                sessionID: sessionID
+            }
+        });
+        socket.on('connect', () => {});
+        socket.on('message', (data) => {
+            setLiveTestStatus(data);
+        })
         fetchProblemData();
-    }, [id])
+
+        return () => {
+            socket.disconnect();
+        }
+
+    }, [id, navigate, sessionID])
 
     return (
         <>
             <div className='parent-container'>
                 <div className='child-container'>
-                    {problemData ? <ProblemDesc data={problemData} /> : <div>Problem data loading...</div>}
+                    {problemData ? <ProblemDesc data={problemData} /> : <Preloader/>}
                     {isAdmin ? <div className='btn-container'>
                         <Button className='edit-btns' label={"EDIT PROBLEM"} goTo={`problems/${id}/edit`}/>
                         <Button className='edit-btns' label={"ADD TESTCASE"} goTo={`problems/${id}/addtc`}/>
@@ -192,7 +217,7 @@ const Problem = ({isAdmin}) => {
                             onChange={(selectedOption) => onSelectLanguageChange(selectedOption)}
                         />
                         <ToggleThemeButton className='child' handleToggleMode={handleToggleMode} isDarkMode={isDarkMode} />
-                        { verdict ? <Verdict ref={verdictRef} verdict={verdict} isAccepted = {isAccepted} submissionID={submissionID} /> : <></>}
+                        { verdict ? <div ref={verdictRef}> <Verdict verdict={verdict} isAccepted = {isAccepted} submissionID={submissionID} /> </div> : <></>}
                         </div>
                     </div>
                     <br />
@@ -217,16 +242,17 @@ const Problem = ({isAdmin}) => {
                     <br />
                     <div className='parent-container'>
                         <CompileButton 
-                         isPressed={compileBtnPressed} 
-                         isCompiling={isCompiling}
-                         isSubmitting={isSubmitting}
-                         handlePress={handleCompile}
+                            isPressed={compileBtnPressed} 
+                            isCompiling={isCompiling}
+                            isSubmitting={isSubmitting}
+                            handlePress={handleCompile}
                          />
                         <SubmitButton 
-                        isPressed={submiBtnPressed}
-                        isCompiling={isCompiling}
-                        isSubmitting={isSubmitting}
-                        handlePress={handleSubmit}
+                            isPressed={submiBtnPressed}
+                            isCompiling={isCompiling}
+                            isSubmitting={isSubmitting}
+                            liveTestStatus={liveTestStatus}
+                            handlePress={handleSubmit}
                         />
                     </div>
                     <div ref={outputRef} className='parent-container'>

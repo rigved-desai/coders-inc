@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './LeaderBoard.css'
 import { SERVER_BASE_URL } from '../../config';
 import usePageTitle from '../../hooks/usePageTitle';
+import Preloader from '../preloader/Preloader';
 
 const LeaderBoard = () => {
 
@@ -34,14 +35,14 @@ const LeaderBoard = () => {
     };
 
     fetchLeaderboard();
-  }, []);
+  }, [navigate]);
 
   return (
     <>
     <h1>Leaderboard</h1>
     <div>
       {loading ? (
-        <div>Loading...</div> 
+        <Preloader/> 
       ) : ( 
         <table className='custom-table'>
           <thead>
@@ -53,7 +54,7 @@ const LeaderBoard = () => {
           </thead>
           <tbody>
             {leaderboardData.map((item, index) => (
-              <tr key={index} className='leaderboard-tr'>
+              <tr key={item._id} className='leaderboard-tr'>
                 <td>{index+1}</td>
                 <td className='leaderboard-column1'><Link to={`/users/${item.username}`} className='leaderboard-a'>{item.username}</Link></td>
                 <td className='leaderboard-column2'>{item.numberOfSolves}</td>

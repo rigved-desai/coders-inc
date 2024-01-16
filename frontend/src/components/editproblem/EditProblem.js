@@ -40,15 +40,14 @@ const EditProblem = ({ isAdmin }) => {
       }
   }
   fetchProblemData();
-  },[id])
+  },[id, navigate])
 
   const handleProblemDataChange = (e) => {
     const {id, value} = e.target;
     setProblemData((prevProblemData) => ({
         ...prevProblemData,
         [id]: value,
-    }))
-    console.log(problemData)
+    }));
   }
   
     const handleTagChange = (e) => {

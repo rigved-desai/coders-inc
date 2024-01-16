@@ -13,7 +13,7 @@ const createContainer = (language) => {
             Cmd:  ['sh', '-c', 'g++ -o ./app/output ./app/exeFile.cpp && ./app/output < ./app/inputFile.txt'],
             StopTimeout: 5,  
             HostConfig: {
-                Memory: 100000000 // 100 mb
+                Memory: 200000000 // 200 mb
             }
         }
     }
@@ -21,8 +21,8 @@ const createContainer = (language) => {
         containerOptions = {
             Image: 'python:latest', 
             Tty: true,
-            Cmd: ['sh', '-c', `python ./app/exeFile.py < ./app/inputFile.txt`],
             StopTimeout: 5,  
+            Cmd:  ['sh', '-c', 'python ./app/exeFile.py < ./app/inputFile.txt'],
             HostConfig: {
                 Memory: 100000000 // 100 mb
             }
@@ -88,14 +88,15 @@ exports.saveFile = (language, code, input) => {
 }
 
 exports.executeFile = async(exePath, language, inputPath) => {
-
+    let exeFileName
+    let execTime
     try {
         console.log(`starting to create docker container at: ${Date.now().toString()}` )
         const container = await createContainer(language)
         console.log(`Container created at: ${Date.now().toString()}` )
 
         const folderName = 'app';
-        let exeFileName
+        
         if(language == 'cpp') {
             exeFileName = 'exeFile.cpp'
         }
@@ -116,14 +117,14 @@ exports.executeFile = async(exePath, language, inputPath) => {
         pack.entry({ name: `${folderName}/inputFile.txt` }, inputContent);
         pack.finalize();
 
-        container.putArchive(pack, { path: "/" })
+        await container.putArchive(pack, { path: "/" })
         console.log(`starting docker container at: ${Date.now().toString()}` )
         await container.start()
         console.log(`started docker container at: ${Date.now().toString()}` )
         const { StatusCode } = await container.wait();
         console.log(`docker container processes ended at: ${Date.now().toString()}` )
         const containerInfo = await container.inspect()
-        const execTime = new Date(containerInfo.State.FinishedAt) - new Date(containerInfo.State.StartedAt)
+        execTime = new Date(containerInfo.State.FinishedAt) - new Date(containerInfo.State.StartedAt)
         return new Promise((resolve, reject) => {
             container.logs({stdout: true, stderr: false,},  (err, stream) => {
                 if(err) {
@@ -136,6 +137,8 @@ exports.executeFile = async(exePath, language, inputPath) => {
                     });
                 }
                 console.log("execution finished!")
+                console.log("EXIT CODE:", StatusCode)
+                console.log(stream.toString())
                 container.remove()
                 resolve({
                     message: stream !== undefined ? stream.toString() : "Error",
@@ -151,10 +154,9 @@ exports.executeFile = async(exePath, language, inputPath) => {
         return({
             message: error.message,
             code: -1,
-            timeTaken: execTime !== undefined ? execTime : 0
+            timeTaken: execTime ? execTime : 0
         });
     }
-
 }
 
 

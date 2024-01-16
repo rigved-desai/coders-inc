@@ -7,6 +7,7 @@ import Button from './Button/Button';
 
 import { SERVER_BASE_URL } from '../../config';
 import usePageTitle from '../../hooks/usePageTitle';
+import Preloader from '../preloader/Preloader';
 
 const ProblemList = ({isAdmin}) => {
 
@@ -37,14 +38,14 @@ const ProblemList = ({isAdmin}) => {
     };
 
     fetchProblemList();
-  }, []);
+  }, [navigate]);
 
     return (
         <>
     <h1 style={{fontFamily: 'Titillium Web'}}>Problems</h1>
     <div>
       {loading ? (
-        <div>Loading...</div>
+        <Preloader/>
       ) : ( 
         <table className='custom-table'>
           <thead>
@@ -56,8 +57,8 @@ const ProblemList = ({isAdmin}) => {
             </tr>
           </thead>
           <tbody>
-            {problemList.map((item, index) => (
-              <tr key={index}>
+            {problemList.map((item) => (
+              <tr key={item._id}>
                 <td className='column1'><Link to={`/problems/${item._id}`}>{item.name}</Link></td>
                 <td>{item.difficulty}</td>
                 <td>{item.tags.join(', ')}</td>

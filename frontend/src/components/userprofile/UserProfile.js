@@ -9,6 +9,7 @@ import SubmissionCounter from './submissioncounter/SubmissionCounter';
 
 import { SERVER_BASE_URL } from '../../config';
 import usePageTitle from '../../hooks/usePageTitle';
+import Preloader from '../preloader/Preloader';
 
 const UserProfile = () => {
 
@@ -22,9 +23,11 @@ const UserProfile = () => {
         numberOfSubmissions: '',
         problemsSolved: []
     })
-    
-    const naviagate = useNavigate();
 
+    const [loadingUserData, setLoadingUserData] = useState(false);
+    
+    const navigate = useNavigate();
+    
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
@@ -36,28 +39,36 @@ const UserProfile = () => {
                 };
                 const response = await axios.get(`${SERVER_BASE_URL}/users/${username}`, config);
                 if(!response.data) {
-                    naviagate('/*')
+                    navigate('/*')
                 }
                 setuserDetails(response.data)
             }
             catch (error) {
-                naviagate('/*')
+                navigate('/*')
             }
         }
-
-        fetchUserDetails()
-    }, [username])
+        setLoadingUserData(true);
+        fetchUserDetails();
+        setLoadingUserData(false);
+    }, [username, navigate])
 
 
     return (
         <>
-            <h2 className='user-header'>{userDetails.username}</h2>
-            <div className='counter-container'>
-                <SubmissionCounter numberOfSubmissions={userDetails.numberOfSubmissions}/>
-                <SolveCounter numberOfSolves={userDetails.numberOfSolves}/>
-            </div>
-            <br/>
-            <ProblemsSolvedTable problemsSolved={userDetails.problemsSolved}/>
+            {
+                loadingUserData ?
+                <Preloader/> :
+                <>
+                    <h2 className='user-header'>{userDetails.username}</h2>
+                    <div className='counter-container'>
+                        
+                        <SubmissionCounter numberOfSubmissions={userDetails.numberOfSubmissions}/>
+                        <SolveCounter numberOfSolves={userDetails.numberOfSolves}/>
+                    </div>
+                    <br/>
+                    <ProblemsSolvedTable problemsSolved={userDetails.problemsSolved}/>
+                </>
+            }
         </>
     )
 }

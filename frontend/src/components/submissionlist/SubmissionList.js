@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import { SERVER_BASE_URL } from '../../config';
 import usePageTitle from '../../hooks/usePageTitle';
+import Preloader from '../preloader/Preloader';
 
 const SubmissionList = () => {
 
@@ -58,7 +59,7 @@ const SubmissionList = () => {
         <h1 style={{fontFamily: 'Titillium Web'}}>Submissions</h1>
     <div>
       {loading ? (
-        <div>Loading...</div> 
+        <Preloader/>
       ) : (
         submissionList && submissionList.length > 0  ?
         <table className='custom-table2'>
@@ -73,8 +74,8 @@ const SubmissionList = () => {
             </tr>
           </thead>
           <tbody>
-            {submissionList.map((item, index) => (
-              <tr key={index}>
+            {submissionList.map((item) => (
+              <tr key={item._id}>
                 <td className='submission-id'><Link to={`/problems/submissions/${item._id}`}>{item._id}</Link></td>
                 <td className='username'><Link to={`/users/${item.submitterUserName}`}>{item.submitterUserName}</Link></td>
                 <td className='problem-name'><Link to={`/problems/${item.problemID}`}>{item.problemName}</Link></td>

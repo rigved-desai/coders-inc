@@ -12,6 +12,7 @@
     "mongodb": "^5.7.0",
     "mongoose": "^7.3.2",
     "nodemon": "^3.0.1",
+    "socket.io": "^4.7.4",
     "tar-pack": "^3.4.1",
     "tar-stream": "^3.1.6",
     "uuid": "^9.0.0"

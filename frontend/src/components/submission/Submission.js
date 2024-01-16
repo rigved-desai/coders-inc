@@ -51,7 +51,7 @@ const Submission = () => {
             }
         }
         fetchSubmissionData();
-    }, [id])
+    }, [id, navigate])
 
     return (
         <>

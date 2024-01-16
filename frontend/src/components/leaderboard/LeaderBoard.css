@@ -5,7 +5,7 @@ h1 {
   
   .custom-table {
     width: 80%;
-    margin: 0 auto;
+    margin: 0 auto 40px auto;
     border-collapse: collapse;
     background-color: #fff;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);

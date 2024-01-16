@@ -18,9 +18,11 @@ function ProblemDesc(props) {
                     <th>SAMPLE INPUT</th>
                 </tr>
             </thead>
-            <tr>
-                <td id='sample-input' style={{whiteSpace: 'pre-line'}}>{sampleInput}</td>
-            </tr>
+            <tbody>
+                <tr>
+                    <td id='sample-input' style={{whiteSpace: 'pre-line'}}>{sampleInput}</td>
+                </tr>
+            </tbody>
         </table>
         <br />
         <table className='sampleio-table'>
@@ -29,16 +31,24 @@ function ProblemDesc(props) {
                     <th>SAMPLE OUTPUT</th>
                 </tr>
             </thead>
-            <tr>
-                <td id='sample-output' style={{whiteSpace: 'pre-line'}}>{sampleOutput}</td>
-            </tr>
+            <tbody>
+                <tr>
+                    <td id='sample-output' style={{whiteSpace: 'pre-line'}}>{sampleOutput}</td>
+                </tr>
+            </tbody>
         </table>
         <br />
         <table className='sampleio-table'>
-            <th>Tags</th>
-            <tr>
-                <td>{tags.join(', ')}</td>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Tags</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{tags.join(', ')}</td>
+                </tr>
+            </tbody>
         </table>
         </>
     )

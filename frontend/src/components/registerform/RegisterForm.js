@@ -33,14 +33,11 @@ const RegisterForm = () => {
       const _PWD_REGEX = new RegExp(PWD_REGEX)
 
       if(!_USERNAME_REGEX.test(username)) {
-        console.log("USERNAME REGEX WORKING")
-        console.log(username)
         setErrorMessage("Invalid username. Should consist of atleast 4 characters and at most 20 characters. No special characters except underscores and hyphens allowed.")
         return;
       }
 
       if(!_PWD_REGEX.test(password)) {
-        console.log("PWD REGEX WORKING")
         setErrorMessage("Invalid password. Should consist of at least 8 characters, 1 uppercase character, 1 lowercase character, 1 number and 1 symbol.")
         return;
       }
