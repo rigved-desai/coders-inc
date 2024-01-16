@@ -27,8 +27,7 @@ const AddProblem = ({ isAdmin }) => {
         setProblemData((prevProblemData) => ({
             ...prevProblemData,
             [id]: value,
-        }))
-        console.log(problemData)
+        }));
     }
 
     const handleTagChange = (e) => {

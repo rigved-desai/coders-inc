@@ -1,6 +1,6 @@
 import './SubmitButton.css';
 
-const SubmitButton = ({handlePress, isPressed, isCompilng, isSubmitting}) => {
+const SubmitButton = ({handlePress, isPressed, isCompilng, isSubmitting, liveTestStatus}) => {
   
   return (
     <button
@@ -8,7 +8,14 @@ const SubmitButton = ({handlePress, isPressed, isCompilng, isSubmitting}) => {
       onClick={handlePress}
       disabled={isCompilng || isSubmitting}
         >
-      {isSubmitting ? 'Testing...' : "Submit"}
+      {
+          isSubmitting ?
+          liveTestStatus ?
+          `${liveTestStatus}...` :
+          "Testing.."
+        : "Submit"
+      }    
+      {/* {isSubmitting ? 'Testing...' : "Submit"} */}
     </button>
   );
 };

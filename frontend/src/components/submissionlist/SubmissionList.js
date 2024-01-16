@@ -74,8 +74,8 @@ const SubmissionList = () => {
             </tr>
           </thead>
           <tbody>
-            {submissionList.map((item, index) => (
-              <tr key={index}>
+            {submissionList.map((item) => (
+              <tr key={item._id}>
                 <td className='submission-id'><Link to={`/problems/submissions/${item._id}`}>{item._id}</Link></td>
                 <td className='username'><Link to={`/users/${item.submitterUserName}`}>{item.submitterUserName}</Link></td>
                 <td className='problem-name'><Link to={`/problems/${item.problemID}`}>{item.problemName}</Link></td>

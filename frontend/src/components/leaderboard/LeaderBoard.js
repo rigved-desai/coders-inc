@@ -54,7 +54,7 @@ const LeaderBoard = () => {
           </thead>
           <tbody>
             {leaderboardData.map((item, index) => (
-              <tr key={index} className='leaderboard-tr'>
+              <tr key={item._id} className='leaderboard-tr'>
                 <td>{index+1}</td>
                 <td className='leaderboard-column1'><Link to={`/users/${item.username}`} className='leaderboard-a'>{item.username}</Link></td>
                 <td className='leaderboard-column2'>{item.numberOfSolves}</td>

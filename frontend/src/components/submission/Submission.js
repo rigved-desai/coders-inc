@@ -35,7 +35,6 @@ const Submission = () => {
 
     useEffect(() => {
         const fetchSubmissionData = async () => {
-            console.log("UseEffect running!");
             try {
                 const token = localStorage.getItem('token')
                 const config = {

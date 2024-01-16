@@ -9,6 +9,7 @@ import SubmissionCounter from './submissioncounter/SubmissionCounter';
 
 import { SERVER_BASE_URL } from '../../config';
 import usePageTitle from '../../hooks/usePageTitle';
+import Preloader from '../preloader/Preloader';
 
 const UserProfile = () => {
 
@@ -22,6 +23,8 @@ const UserProfile = () => {
         numberOfSubmissions: '',
         problemsSolved: []
     })
+
+    const [loadingUserData, setLoadingUserData] = useState(false);
     
     const navigate = useNavigate();
     
@@ -44,20 +47,28 @@ const UserProfile = () => {
                 navigate('/*')
             }
         }
-
-        fetchUserDetails()
+        setLoadingUserData(true);
+        fetchUserDetails();
+        setLoadingUserData(false);
     }, [username, navigate])
 
 
     return (
         <>
-            <h2 className='user-header'>{userDetails.username}</h2>
-            <div className='counter-container'>
-                <SubmissionCounter numberOfSubmissions={userDetails.numberOfSubmissions}/>
-                <SolveCounter numberOfSolves={userDetails.numberOfSolves}/>
-            </div>
-            <br/>
-            <ProblemsSolvedTable problemsSolved={userDetails.problemsSolved}/>
+            {
+                loadingUserData ?
+                <Preloader/> :
+                <>
+                    <h2 className='user-header'>{userDetails.username}</h2>
+                    <div className='counter-container'>
+                        
+                        <SubmissionCounter numberOfSubmissions={userDetails.numberOfSubmissions}/>
+                        <SolveCounter numberOfSolves={userDetails.numberOfSolves}/>
+                    </div>
+                    <br/>
+                    <ProblemsSolvedTable problemsSolved={userDetails.problemsSolved}/>
+                </>
+            }
         </>
     )
 }

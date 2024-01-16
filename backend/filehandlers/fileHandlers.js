@@ -13,7 +13,7 @@ const createContainer = (language) => {
             Cmd:  ['sh', '-c', 'g++ -o ./app/output ./app/exeFile.cpp && ./app/output < ./app/inputFile.txt'],
             StopTimeout: 5,  
             HostConfig: {
-                Memory: 100000000 // 100 mb
+                Memory: 200000000 // 200 mb
             }
         }
     }

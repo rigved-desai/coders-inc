@@ -3,6 +3,7 @@ const Submission = require('../models/submissionModel')
 const User = require('../models/userModel')
 const TestCase = require('../models/testCaseModel');
 const { executeCode } = require('./compileController');
+const webSocketManager = require('../websocketmanager/webSocketManager');
 const {CODE_COMPILATION_FAILED,
     CODE_TC_FAILED,
     CODE_SERVER_ERROR} = require('../config/config')
@@ -25,9 +26,8 @@ exports.loadSubmitPage = async (req, res, next) => {
 exports.submitSolution = async (req, res, next) => {
     try {
         const problemID = req.params.id;
-        const {language, code }  = req.body;
+        const {language, code, sessionID } = req.body;
         const username = req.user
-
 
         if(problemID == undefined || language == undefined || code == undefined || username == undefined ) {
             return res.status(404).json({
@@ -48,9 +48,9 @@ exports.submitSolution = async (req, res, next) => {
         }
         let testDetails = []
         for(let i=0; i<testcases.length; i++) {
+            webSocketManager.sendMessage(sessionID, `Running on Test Case ${i+1}`);
             req.body.input = testcases[i].testCaseInput;
             req.body.output = testcases[i].testCaseOutput;
-            
             try {
                 let result = await executeCode(req, res, next);
                 testDetails.push ({

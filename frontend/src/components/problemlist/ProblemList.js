@@ -57,8 +57,8 @@ const ProblemList = ({isAdmin}) => {
             </tr>
           </thead>
           <tbody>
-            {problemList.map((item, index) => (
-              <tr key={index}>
+            {problemList.map((item) => (
+              <tr key={item._id}>
                 <td className='column1'><Link to={`/problems/${item._id}`}>{item.name}</Link></td>
                 <td>{item.difficulty}</td>
                 <td>{item.tags.join(', ')}</td>
